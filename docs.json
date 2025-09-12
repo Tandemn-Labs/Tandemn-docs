@@ -10,47 +10,32 @@
   },
   "favicon": "/favicon.png",
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "introduction",
-              "quickstart"
-            ]
-          },
-          {
-            "group": "Inference",
-            "pages": [
-              "inference/chat"
-            ]
-          },
-          {
-            "group": "Learn more",
-            "pages": [
-              "learn-more/faq",
-              "learn-more/links"
-            ]
-          }
+        "group": "Getting started",
+        "pages": [
+          "introduction",
+          "quickstart"
         ]
       },
       {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/chat-completions"
-            ]
-          }
+        "group": "Inference",
+        "pages": [
+          "inference/chat"
+        ]
+      },
+      {
+        "group": "API reference",
+        "pages": [
+          "api-reference/introduction",
+          "api-reference/endpoint/chat-completions"
+        ]
+      },
+      {
+        "group": "Learn more",
+        "pages": [
+          "learn-more/faq",
+          "learn-more/links"
         ]
       }
     ]
