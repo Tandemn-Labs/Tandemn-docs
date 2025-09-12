@@ -18,8 +18,13 @@
             "group": "Getting started",
             "pages": [
               "introduction",
-              "quickstart",
-              "development"
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Inference",
+            "pages": [
+              "inference/chat"
             ]
           },
           {
