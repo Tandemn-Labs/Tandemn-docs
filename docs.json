@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "willow",
+  "theme": "mint",
   "name": "Tandemn",
   "description": "Tandemn is an AI infrastructure platform that cuts the cost of running batch inference by 30–50%. Instead of relying solely on high end GPUs, Tandemn aggregates and routes jobs to the top open source models across heterogeneous GPU pools. This draws on idle capacity across mixed GPU supply and delivers comparable inference latency at a significantly lower cost. With a simple API swap, Tandemn’s orchestration layer selects the optimal hardware mix, allowing teams to realize immediate value.",
   "colors": {
@@ -16,19 +16,6 @@
         "pages": [
           "introduction",
           "quickstart"
-        ]
-      },
-      {
-        "group": "Inference",
-        "pages": [
-          "inference/chat"
-        ]
-      },
-      {
-        "group": "API reference",
-        "pages": [
-          "api-reference/introduction",
-          "api-reference/endpoint/chat-completions"
         ]
       },
       {

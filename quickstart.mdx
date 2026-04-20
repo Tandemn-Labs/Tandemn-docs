@@ -1,64 +1,59 @@
 ---
 title: "Quickstart"
-description: "3,2,1... Your inference is ready"
 ---
 
+# Introduction
 
-### 1. Create an account
-Go to Tandemn's [gateway](https://api.tandemn.com/keys) and create an account. Right now, we support signing in with GitHub,
-Gmail and Apple accounts. 
+Tandemn is a cluster orchestration software that orchestrates inference jobs on your accelerated cluster. The software follows a client-server architecture. The sysadmin brings up Tandemn's server on a machine that is network-reachable by users. The client is implemented as a CLI that end-users can use as a front-end to submit inference jobs to the server.
 
-### 2. Generating keys
-After signing in, go to the [keys page](https://api.tandemn.com/keys) and follow the instructions to generate an API key.
+# Pre-requisites
 
-### 3. Create a request!
+tandemn-server:
 
-Here, we show an example of running an inference on Llama 70B. The Python code shows an example without streaming and the
-cURL command shows an example with streaming.
+- Docker with Docker Compose support
 
-<CodeGroup>
+tandemn-cli:
 
-```python Python
-import requests
+- Python >= 3.12
 
-url = "https://api.tandemn.com/api/v1/chat/completions"
-headers = {
-    "Authorization": f"Bearer <your-api-key>",
-    "Content-Type": "application/json"
-}
-data = {
-    "model": "casperhansen/llama-3.3-70b-instruct-awq",
-    "messages": [
-        {"role": "user", "content": "Hello! Can you explain quantum computing?"}
-    ]
-}
+# Server
 
-response = requests.post(url, headers=headers, json=data)
-print(response.json())
+The following steps are for the sysadmin to bring up Tandemn's server in order to manage the cluster and handle inference job requests from users. The servers consists of 3 containers, and are bundled in one `docker-compose.yml`.
+
+### Download the release
+
+### Populate the .env file
+Copy the `.env.example` file into `.env` and edit the respective parameters.
+```
+cp .env.example .env
 ```
 
-```cURL cURL
-curl --location 'https://api.tandemn.com/api/v1/chat/completions' \
---header 'Authorization: Bearer <your-api-key>' \
---header 'Accept: text/event-stream' \
---header 'Cache-Control: no-cache' \
---header 'Content-Type: application/json' \
---data '{
-  "model": "casperhansen/llama-3.3-70b-instruct-awq",
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a helpful assistant"
-    },
-    {
-      "role": "user",
-      "content": "Hello! Can you explain quantum computing?"
-    }
-  ],
-  "stream": true,
-  "temperature": 0.7,
-  "max_completion_tokens": 2000
-}'
+### Bring up the containers
+```
+docker compose up
 ```
 
-</CodeGroup>
+
+# Client (CLI)
+
+### Install the Tandemn CLI
+You can do the following in any Python installation or virtual environment
+```
+pip install tandemn
+```
+
+### Set server URL
+```
+export TD_SERVER_URL=<your-server-url>
+```
+
+### Check connectivity
+```
+tandemn check
+```
+
+### Start using the CLI to launch jobs
+```
+tandemn deploy Qwen/Qwen2.5-7B-Instruct <some-jsonl-prompt-file> --slo 4
+```
+You can look in the CLI documentation section to see details about the commands.
