@@ -21,6 +21,12 @@ tandemn-cli:
 The following steps are for the sysadmin to bring up Tandemn's server in order to manage the cluster and handle inference job requests from users. The servers consists of 3 containers, and are bundled in one `docker-compose.yml`.
 
 ### Download the release
+The server is released as .tar.xz tarball, bundling a `docker-compose.yml` and a `.env.example`.
+```
+curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
+tar -xzf tandemn-0.0.1.tar.gz
+cd tandemn-0.0.1
+```
 
 ### Populate the .env file
 Copy the `.env.example` file into `.env` and edit the respective parameters.
@@ -30,6 +36,7 @@ cp .env.example .env
 
 ### Bring up the containers
 ```
+docker compose pull
 docker compose up
 ```
 
