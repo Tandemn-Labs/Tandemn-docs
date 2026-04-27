@@ -1,32 +1,43 @@
 ---
 title: "FAQ"
-description: "The TL;DR of who Tandemn is and what we are doing"
+description: "Answers to common questions about Tandemn."
+icon: "message-circle-question"
 ---
 
-### How did things begin?
+## What is Tandemn?
 
-Back when we were students doing research, we realized that GPU-accelerated compute was hard to secure. Even if we could find it, we could not afford it.
-However, not all workloads needed the newest, largest and most expensive GPUs. With thousands of smaller GPUs sitting idle in datacenters and in private
-clusters, we envisioned a system where one composed these existing hardwares, allowing anyone to run GPU workloads as if they had access to the inaccessible.
-No longer merely a vision, this is what we are building today.
+Tandemn is an infrastructure layer for running inference workloads across accelerated clusters. It gives administrators a server to operate and users a CLI to submit jobs.
 
-### What are you building next?
+## Who should use Tandemn?
 
-We have just released our first engine for inference across distributed, heterogeneous GPUs. We are now working on v1, which
-will feature more parallelism, more throughput and less waiting.
+Tandemn is built for teams that run inference workloads and want to reduce manual infrastructure decisions. It is especially useful when an organization has mixed GPU supply or idle accelerated capacity.
 
-### How can I get started?
+## What problem does Tandemn solve?
 
-Check out our [Quickstart](/quickstart) page 
+Inference infrastructure often requires users to choose hardware, size jobs, and manage placement manually. Tandemn moves those decisions into an orchestration layer so users can submit work through a simpler interface.
 
+## Is Tandemn only for batch inference?
 
-### I want to follow the developments!
+The current docs focus on batch inference jobs submitted through the CLI. Batch workflows are a natural fit when jobs can be queued, planned, and executed across available resources.
 
-- Our code is open-source! Check out our repositories at [Github](https://github.com/tandemn-labs)
-- We sometimes post on [Twitter](https://x.com/Tandemn_labs)
+## What does a user need to get started?
 
+A user needs the Tandemn CLI, the server URL from an administrator, and a valid prompt file.
 
-### Enjoy an XKCD on us
+```bash
+pip install tandemn
+export TD_SERVER_URL=<your-server-url>
+tandemn check
+```
 
-![XKCD 1727](https://imgs.xkcd.com/comics/number_of_computers.png)
+## What does an administrator need to get started?
 
+An administrator needs a machine with Docker Compose support, access to the cluster resources Tandemn will manage, and the Tandemn server release bundle.
+
+## How do I know which models are available?
+
+Model availability is deployment-specific. Ask your administrator which model identifiers are supported in your Tandemn environment.
+
+## Where should I start?
+
+Use the [Quickstart](/quickstart) for an end-to-end setup, or use [Requirements](/getting-started/requirements) to understand what you need before deploying Tandemn.

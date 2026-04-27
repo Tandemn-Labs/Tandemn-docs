@@ -1,0 +1,46 @@
+---
+title: "Environment variables"
+description: "Environment variables used by Tandemn users and administrators."
+sidebarTitle: "Env variables"
+icon: "list-tree"
+---
+
+This page lists the environment variables that users are expected to set directly. Server-side variables are defined by the `.env.example` file included in each Tandemn server release.
+
+## CLI variables
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `TD_SERVER_URL` | Yes | URL of the Tandemn server that the CLI should contact. |
+
+```bash
+export TD_SERVER_URL=<your-server-url>
+```
+
+Verify the value with:
+
+```bash
+echo $TD_SERVER_URL
+tandemn check
+```
+
+## Server variables
+
+Server variables are release-specific. After downloading the server bundle, inspect `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Use `.env` for the actual deployment values.
+
+<Warning>
+  Do not expose secrets, credentials, tokens, or private hostnames in public documentation or committed files.
+</Warning>
+
+## Common mistakes
+
+- Setting `TD_SERVER_URL` in one shell and running `tandemn` from another shell.
+- Using a server URL that is reachable from the admin machine but not from the user's network.
+- Copying `.env.example` but leaving placeholder values unchanged.
+- Committing `.env` by accident.

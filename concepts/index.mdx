@@ -1,0 +1,27 @@
+---
+title: "Concepts"
+description: "Understand the core ideas behind Tandemn's CLI-first inference orchestration model."
+sidebarTitle: "Overview"
+icon: "book-open"
+---
+
+Use these pages to understand how Tandemn works before operating it in a shared environment.
+
+<Columns cols={2}>
+  <Card title="Architecture" icon="network" href="/concepts/architecture">
+    See how the CLI, server, and GPU resources fit together.
+  </Card>
+  <Card title="Batch inference" icon="layers" href="/concepts/batch-inference">
+    Learn why Tandemn focuses on queued inference workloads.
+  </Card>
+  <Card title="Job lifecycle" icon="route" href="/concepts/job-lifecycle">
+    Follow a job from input file to execution.
+  </Card>
+  <Card title="Models and routing" icon="shuffle" href="/concepts/models-and-routing">
+    Understand how model choice and hardware placement relate.
+  </Card>
+</Columns>
+
+## CLI-first design
+
+Tandemn is documented as a CLI-first product. Users submit work with `tandemn deploy`; administrators operate the server and cluster environment behind that interface.

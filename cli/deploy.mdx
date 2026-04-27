@@ -1,0 +1,45 @@
+---
+title: "tandemn deploy"
+description: "Submit an inference job to Tandemn."
+sidebarTitle: "deploy"
+icon: "rocket"
+---
+
+Use `tandemn deploy` to submit an inference job to the Tandemn server.
+
+## Usage
+
+```bash
+tandemn deploy <model> <prompts-jsonl-file> --slo <value>
+```
+
+## Example
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+```
+
+## Arguments
+
+| Argument | Required | Description |
+| --- | --- | --- |
+| `model` | Yes | Model identifier to run. Use a model supported by your Tandemn deployment. |
+| `prompts-jsonl-file` | Yes | Path to the JSONL file containing the prompts or requests for the batch job. |
+| `--slo` | Yes | Service-level objective used by Tandemn when planning the job. |
+
+## Prompt file format
+
+Each line should be one JSON object.
+
+```json prompts.jsonl
+{"messages":[{"role":"user","content":"What is Tandemn?"}]}
+{"messages":[{"role":"user","content":"Summarize GPU scheduling in one sentence."}]}
+```
+
+## Before submitting
+
+- Run `tandemn check`.
+- Confirm the prompt file exists.
+- Confirm the file is valid JSONL.
+- Confirm the model is supported by your deployment.
+- Start with a small file before scaling up.

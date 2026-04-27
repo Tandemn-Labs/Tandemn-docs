@@ -2,26 +2,81 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Tandemn",
-  "description": "Tandemn is an AI infrastructure platform that cuts the cost of running batch inference by 30–50%. Instead of relying solely on high end GPUs, Tandemn aggregates and routes jobs to the top open source models across heterogeneous GPU pools. This draws on idle capacity across mixed GPU supply and delivers comparable inference latency at a significantly lower cost. With a simple API swap, Tandemn’s orchestration layer selects the optimal hardware mix, allowing teams to realize immediate value.",
+  "description": "Tandemn is an AI infrastructure platform for running inference workloads across heterogeneous GPU clusters. Tandemn schedules jobs, chooses an efficient hardware mix, and gives teams a simple CLI and server workflow for batch inference.",
   "colors": {
-    "primary": "#0b545c",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#00f4fd",
+    "light": "#00f4fd",
+    "dark": "#00f4fd"
+  },
+  "icons": {
+    "library": "lucide"
   },
   "favicon": "/favicon.png",
   "navigation": {
     "groups": [
       {
-        "group": "Getting started",
+        "group": "Start here",
+        "icon": "rocket",
         "pages": [
           "introduction",
           "quickstart"
         ]
       },
       {
+        "group": "Getting started",
+        "icon": "play",
+        "root": "getting-started/index",
+        "directory": "card",
+        "pages": [
+          "getting-started/requirements",
+          "getting-started/install-server",
+          "getting-started/install-cli",
+          "getting-started/run-first-job"
+        ]
+      },
+      {
+        "group": "Concepts",
+        "icon": "book-open",
+        "root": "concepts/index",
+        "directory": "card",
+        "pages": [
+          "concepts/architecture",
+          "concepts/batch-inference",
+          "concepts/job-lifecycle",
+          "concepts/models-and-routing"
+        ]
+      },
+      {
+        "group": "Administration",
+        "icon": "settings",
+        "root": "admin/index",
+        "directory": "card",
+        "pages": [
+          "admin/server-deployment",
+          "admin/configuration",
+          "admin/environment-variables",
+          "admin/troubleshooting"
+        ]
+      },
+      {
+        "group": "CLI Reference",
+        "icon": "terminal",
+        "root": "cli/index",
+        "directory": "card",
+        "pages": [
+          "cli/overview",
+          "cli/check",
+          "cli/deploy"
+        ]
+      },
+      {
         "group": "Learn more",
+        "icon": "circle-help",
+        "root": "learn-more/index",
+        "directory": "card",
         "pages": [
           "learn-more/faq",
+          "learn-more/support",
           "learn-more/links"
         ]
       }
@@ -36,20 +91,24 @@
       {
         "label": "Support",
         "href": "mailto:contact@tandemn.com"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Tandemn-Labs"
       }
     ]
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {

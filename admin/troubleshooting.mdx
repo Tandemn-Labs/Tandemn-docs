@@ -1,0 +1,74 @@
+---
+title: "Troubleshooting"
+description: "Fix common Tandemn setup and job submission issues."
+icon: "wrench"
+---
+
+Start with connectivity. Most first-run issues happen before the job reaches the orchestration layer.
+
+## `tandemn check` fails
+
+Check the server URL:
+
+```bash
+echo $TD_SERVER_URL
+```
+
+Then confirm the CLI can reach the server from the same terminal session:
+
+```bash
+tandemn check
+```
+
+If it still fails:
+
+- Confirm the server is running.
+- Confirm the server URL includes the correct host and port.
+- Confirm your network can reach the server.
+- Confirm any firewall or VPN rules allow the connection.
+
+## Docker Compose does not start
+
+On the server host, check Docker and Compose:
+
+```bash
+docker --version
+docker compose version
+```
+
+Then pull and start the services again:
+
+```bash
+docker compose pull
+docker compose up
+```
+
+## A job is rejected
+
+Common causes:
+
+- The model is not supported by the deployment.
+- The input file path is wrong.
+- The prompt file is not valid JSONL.
+- The requested SLO is outside the conventions used by your deployment.
+- The cluster does not currently have compatible capacity.
+
+## A prompt file fails
+
+Validate that each line is a complete JSON object.
+
+```json
+{"messages":[{"role":"user","content":"Hello"}]}
+```
+
+Avoid trailing commas and multi-line JSON objects in JSONL files.
+
+## Still blocked
+
+Send your administrator:
+
+- The command you ran
+- The value of `TD_SERVER_URL`, without secrets
+- The model name
+- The first few non-sensitive lines of the JSONL file
+- The error message from the CLI

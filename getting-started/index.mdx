@@ -1,0 +1,38 @@
+---
+title: "Getting started"
+description: "Prepare your environment, install Tandemn, and submit a first inference job."
+sidebarTitle: "Overview"
+icon: "play"
+---
+
+Use this section when you are setting up Tandemn for the first time. Start with the requirements, then install the server and CLI, then submit a small test job.
+
+<Steps>
+  <Step title="Confirm requirements">
+    Check the server, Docker Compose, Python, and network requirements before installing anything.
+  </Step>
+  <Step title="Deploy the server">
+    Start the Tandemn server on a machine users can reach.
+  </Step>
+  <Step title="Install the CLI">
+    Install the `tandemn` package and point it at the server.
+  </Step>
+  <Step title="Run a first job">
+    Submit a small JSONL prompt file and confirm the end-to-end workflow.
+  </Step>
+</Steps>
+
+<Columns cols={2}>
+  <Card title="Requirements" icon="list-check" href="/getting-started/requirements">
+    Review what administrators and CLI users need before setup.
+  </Card>
+  <Card title="Install the server" icon="server" href="/getting-started/install-server">
+    Deploy Tandemn with the release bundle and Docker Compose.
+  </Card>
+  <Card title="Install the CLI" icon="terminal" href="/getting-started/install-cli">
+    Set up a local command line environment.
+  </Card>
+  <Card title="Run your first job" icon="rocket" href="/getting-started/run-first-job">
+    Submit a model and JSONL prompt file to Tandemn.
+  </Card>
+</Columns>

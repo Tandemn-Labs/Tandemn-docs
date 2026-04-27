@@ -1,0 +1,36 @@
+---
+title: "Batch inference"
+description: "How Tandemn thinks about queued inference workloads."
+icon: "layers"
+---
+
+Batch inference is the process of running many inference requests as a workload instead of serving one interactive request at a time.
+
+In Tandemn, a batch job usually starts as a prompt file and a model selection. The CLI sends that job to the server, and the server decides how to run it across the available accelerated infrastructure.
+
+## When batch inference is a good fit
+
+- Offline evaluation jobs
+- Dataset labeling or enrichment
+- Scheduled summarization, extraction, or classification tasks
+- Experiments that can tolerate queueing in exchange for lower cost or better hardware utilization
+
+## Why heterogeneous GPUs help
+
+Not every workload needs the newest, largest GPU. Some jobs can run efficiently on smaller or less utilized accelerators. Tandemn is designed to make that resource selection part of the orchestration layer instead of a manual decision for every user.
+
+## What users provide
+
+Users typically provide:
+
+- A model identifier
+- A JSONL input file
+- A service-level objective
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+```
+
+## What Tandemn handles
+
+Tandemn receives the job, evaluates the available resources, and chooses an execution plan based on the deployment's cluster state and workload requirements.

@@ -1,0 +1,29 @@
+---
+title: "CLI Reference"
+description: "Command reference for the Tandemn CLI."
+sidebarTitle: "Overview"
+icon: "terminal"
+---
+
+Tandemn is operated by users through the CLI. Start by checking connectivity, then submit jobs with `tandemn deploy`.
+
+<Columns cols={2}>
+  <Card title="CLI overview" icon="terminal" href="/cli/overview">
+    Install, configure, and use the Tandemn CLI.
+  </Card>
+  <Card title="tandemn check" icon="circle-check" href="/cli/check">
+    Verify that your CLI can reach the Tandemn server.
+  </Card>
+  <Card title="tandemn deploy" icon="rocket" href="/cli/deploy">
+    Submit a model inference job with a JSONL input file.
+  </Card>
+</Columns>
+
+## Minimal workflow
+
+```bash
+pip install tandemn
+export TD_SERVER_URL=<your-server-url>
+tandemn check
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+```

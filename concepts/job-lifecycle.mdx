@@ -1,0 +1,35 @@
+---
+title: "Job lifecycle"
+description: "What happens after a user submits a Tandemn job."
+icon: "route"
+---
+
+A Tandemn job moves from user submission to server-side scheduling and execution.
+
+<Steps>
+  <Step title="Prepare input">
+    The user prepares a JSONL prompt file and chooses a model that the deployment can run.
+  </Step>
+  <Step title="Submit">
+    The user runs `tandemn deploy` from a machine that can reach the Tandemn server.
+  </Step>
+  <Step title="Validate">
+    The server checks the request and determines whether the workload can be accepted.
+  </Step>
+  <Step title="Plan">
+    Tandemn evaluates the available GPU pool and chooses where to place the workload.
+  </Step>
+  <Step title="Execute">
+    The workload runs on the selected resources.
+  </Step>
+  <Step title="Review">
+    The user checks the CLI output and any job artifacts exposed by the deployment.
+  </Step>
+</Steps>
+
+## Practical advice
+
+- Start with a small prompt file before submitting a large workload.
+- Confirm the model is available in your deployment.
+- Keep `TD_SERVER_URL` visible in your terminal when debugging.
+- Ask your administrator for the supported SLO conventions in your environment.

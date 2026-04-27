@@ -1,14 +1,53 @@
 ---
 title: "Introduction"
-description: "Welcome to the Tandemn docs!"
+description: "Learn what Tandemn does, who it is for, and where to start."
+icon: "house"
 ---
 
-Tandemn is an AI infrastructure platform that cuts the cost of running batch inference by _30–50%_. Instead of relying solely on 
-high end GPUs, Tandemn:
+Tandemn helps teams run inference workloads across accelerated infrastructure without hand-tuning every model, GPU, and batch job. It provides a server that manages the cluster and a CLI that users can use to submit inference jobs.
 
-- **Aggregates** and routes jobs to the top open source models deployed across a collection of GPUs on separate machines
-- **Deploys** across heterogeneous GPU pools, drawing on idle capacity across mixed GPU instances
-- **Comparable** inference latency at a significantly lower cost
+Instead of sending every workload to the newest and most expensive accelerator, Tandemn can route jobs across heterogeneous GPU pools and use the hardware that best matches the workload's latency and throughput requirements.
 
-Tandemn’s orchestration layer selects the _optimal hardware mix_, allowing teams to realize immediate value.
+<Columns cols={2}>
+  <Card title="Run your first job" icon="rocket" href="/quickstart" cta="Start the quickstart">
+    Install the server, connect the CLI, and submit a model inference job.
+  </Card>
+  <Card title="Understand the architecture" icon="network" href="/concepts/architecture" cta="View architecture">
+    Learn how the server, users, GPU workers, and job scheduler fit together.
+  </Card>
+  <Card title="Set up a cluster" icon="server" href="/getting-started/install-server" cta="Deploy server">
+    Bring up Tandemn's server using the release bundle and Docker Compose.
+  </Card>
+  <Card title="Use the CLI" icon="terminal" href="/cli/overview" cta="Open CLI reference">
+    Check connectivity and submit jobs from a local Python environment.
+  </Card>
+</Columns>
 
+## What Tandemn is for
+
+Tandemn is designed for teams that already have, or plan to operate, accelerated compute and want a simpler way to run inference workloads across that capacity.
+
+- **Infrastructure teams** can expose a single service for users instead of asking each team to manage hardware placement.
+- **ML and application teams** can submit jobs through the CLI without deciding which machine or GPU should run them.
+- **Organizations with mixed GPU supply** can use available capacity more efficiently across different machines and accelerator types.
+
+## How the workflow fits together
+
+<Steps>
+  <Step title="An administrator starts the Tandemn server">
+    The server is deployed on a machine that users can reach over the network. It manages cluster state and receives inference job requests.
+  </Step>
+  <Step title="Users install the Tandemn CLI">
+    Users install the `tandemn` Python package, set `TD_SERVER_URL`, and check connectivity.
+  </Step>
+  <Step title="Users submit inference jobs">
+    A user provides a model, a JSONL prompt file, and a service-level objective. Tandemn schedules the job across available accelerated resources.
+  </Step>
+  <Step title="Tandemn chooses the execution plan">
+    The orchestration layer selects an efficient hardware mix for the workload so users can focus on the job rather than the cluster.
+  </Step>
+</Steps>
+
+## Next step
+
+Start with the [Quickstart](/quickstart) if you want the shortest path from a new environment to a submitted inference job.

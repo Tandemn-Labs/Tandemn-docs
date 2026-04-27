@@ -1,0 +1,30 @@
+---
+title: "Administration"
+description: "Operate the Tandemn server and help users troubleshoot setup and job submission."
+sidebarTitle: "Overview"
+icon: "settings"
+---
+
+This section is for the person responsible for running the Tandemn server and supporting users.
+
+<Columns cols={2}>
+  <Card title="Server deployment" icon="server-cog" href="/admin/server-deployment">
+    Bring up the Tandemn server and verify client connectivity.
+  </Card>
+  <Card title="Configuration" icon="sliders-horizontal" href="/admin/configuration">
+    Manage release-specific settings with `.env`.
+  </Card>
+  <Card title="Environment variables" icon="list-tree" href="/admin/environment-variables">
+    Understand user-facing and server-side environment variables.
+  </Card>
+  <Card title="Troubleshooting" icon="wrench" href="/admin/troubleshooting">
+    Debug connectivity, Docker Compose, and job submission issues.
+  </Card>
+</Columns>
+
+## Administrator responsibilities
+
+- Keep the server reachable for CLI users.
+- Maintain deployment-specific configuration.
+- Share supported model identifiers and SLO conventions.
+- Help users diagnose failed connectivity or rejected jobs.

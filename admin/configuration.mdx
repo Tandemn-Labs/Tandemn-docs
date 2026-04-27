@@ -1,0 +1,47 @@
+---
+title: "Configuration"
+description: "How to approach Tandemn server configuration."
+icon: "sliders-horizontal"
+---
+
+Tandemn server configuration starts from the `.env.example` file included in the release bundle.
+
+## Configure from the example
+
+```bash
+cp .env.example .env
+```
+
+Open `.env`, review every value, and update it for your deployment. The exact fields can change between releases, so use the bundled `.env.example` as the source of truth for that release.
+
+## Configuration principles
+
+- Keep deployment-specific values in `.env`.
+- Do not commit `.env` to source control.
+- Use separate `.env` files for separate environments.
+- Record which server URL users should set in `TD_SERVER_URL`.
+- Keep model availability and cluster assumptions documented for users.
+
+## User-facing value
+
+Users need one configuration value to start:
+
+```bash
+export TD_SERVER_URL=<your-server-url>
+```
+
+After that, they can verify access with:
+
+```bash
+tandemn check
+```
+
+## Configuration handoff
+
+When onboarding a new user, give them:
+
+- The server URL
+- Supported model identifiers
+- Expected input file format
+- Expected SLO conventions
+- A support contact for failed jobs or connectivity issues

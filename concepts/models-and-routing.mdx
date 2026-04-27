@@ -1,0 +1,35 @@
+---
+title: "Models and routing"
+description: "How model selection and hardware routing fit into Tandemn."
+icon: "shuffle"
+---
+
+Tandemn users submit jobs with a model identifier. The server uses the deployment's available resources and configuration to decide how that workload should run.
+
+## Model identifiers
+
+The quickstart uses a Hugging Face style model identifier:
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+```
+
+Use model identifiers that your Tandemn deployment supports. Availability depends on the server configuration, the model artifacts your organization allows, and the GPU resources attached to the cluster.
+
+## Routing goals
+
+Tandemn's routing layer is designed to reduce the amount of manual placement work users need to do. Instead of asking each user to pick a specific machine, Tandemn can evaluate the job and choose an appropriate hardware mix.
+
+## What affects placement
+
+The exact placement decision depends on deployment-specific configuration, but these are the common inputs to reason about:
+
+- Model size and runtime requirements
+- Prompt file size
+- Requested SLO
+- Available GPUs
+- Current cluster load
+
+<Note>
+  If a model cannot be scheduled, the first thing to check is whether the model is enabled in the deployment and whether compatible resources are available.
+</Note>

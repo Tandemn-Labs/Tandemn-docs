@@ -1,66 +1,111 @@
 ---
 title: "Quickstart"
+description: "Deploy Tandemn, connect the CLI, and submit your first inference job."
+icon: "rocket"
 ---
 
-# Introduction
+This quickstart walks through a minimal Tandemn setup: an administrator starts the server, a user connects the CLI, and the user submits a batch inference job.
 
-Tandemn is a cluster orchestration software that orchestrates inference jobs on your accelerated cluster. The software follows a client-server architecture. The sysadmin brings up Tandemn's server on a machine that is network-reachable by users. The client is implemented as a CLI that end-users can use as a front-end to submit inference jobs to the server.
+<Note>
+  You need a network-reachable machine for the Tandemn server and Docker Compose support on that machine.
+</Note>
 
-# Pre-requisites
+## What you will do
 
-tandemn-server:
+<Steps>
+  <Step title="Download the Tandemn server release">
+    Pull the release bundle that contains the Docker Compose configuration and example environment file.
+  </Step>
+  <Step title="Start the server">
+    Configure `.env`, pull the container images, and start the service stack.
+  </Step>
+  <Step title="Install the CLI">
+    Install the `tandemn` Python package in your local environment.
+  </Step>
+  <Step title="Submit a job">
+    Point the CLI at the server and run a first inference job.
+  </Step>
+</Steps>
 
-- Docker with Docker Compose support
+## 1. Start the server
 
-tandemn-cli:
+The Tandemn server is packaged as a release bundle with a `docker-compose.yml` file and an `.env.example` file.
 
-- Python >= 3.12
-
-# Server
-
-The following steps are for the sysadmin to bring up Tandemn's server in order to manage the cluster and handle inference job requests from users. The servers consists of 3 containers, and are bundled in one `docker-compose.yml`.
-
-### Download the release
-The server is released as .tar.xz tarball, bundling a `docker-compose.yml` and a `.env.example`.
-```
+```bash
 curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
 tar -xzf tandemn-0.0.1.tar.gz
 cd tandemn-0.0.1
 ```
 
-### Populate the .env file
-Copy the `.env.example` file into `.env` and edit the respective parameters.
-```
+Copy the example environment file and edit the values for your cluster.
+
+```bash
 cp .env.example .env
 ```
 
-### Bring up the containers
-```
+Start the containers.
+
+```bash
 docker compose pull
 docker compose up
 ```
 
+<Tip>
+  Keep the server URL handy. CLI users will set it as `TD_SERVER_URL`.
+</Tip>
 
-# Client (CLI)
+## 2. Install the CLI
 
-### Install the Tandemn CLI
-You can do the following in any Python installation or virtual environment
-```
+Install the Tandemn CLI in a Python environment.
+
+<CodeGroup>
+
+```bash pip
 pip install tandemn
 ```
 
-### Set server URL
-```
-export TD_SERVER_URL=<your-server-url>
+```bash venv
+python -m venv .venv
+source .venv/bin/activate
+pip install tandemn
 ```
 
-### Check connectivity
-```
+</CodeGroup>
+
+## 3. Connect to the server
+
+Set the server URL and verify that the CLI can reach it.
+
+```bash
+export TD_SERVER_URL=<your-server-url>
 tandemn check
 ```
 
-### Start using the CLI to launch jobs
+If the check fails, see [Troubleshooting](/admin/troubleshooting).
+
+## 4. Submit a job
+
+Create or choose a JSONL prompt file, then submit it with a model and SLO.
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct <prompts.jsonl> --slo 4
 ```
-tandemn deploy Qwen/Qwen2.5-7B-Instruct <some-jsonl-prompt-file> --slo 4
-```
-You can look in the CLI documentation section to see details about the commands.
+
+You should see CLI output showing that the job was accepted by the server.
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title="Install the server" icon="server" href="/getting-started/install-server">
+    Review the deployment flow in more detail.
+  </Card>
+  <Card title="CLI deploy command" icon="terminal" href="/cli/deploy">
+    Learn what the deploy command expects.
+  </Card>
+  <Card title="Architecture" icon="network" href="/concepts/architecture">
+    Understand the client-server model.
+  </Card>
+  <Card title="Troubleshooting" icon="wrench" href="/admin/troubleshooting">
+    Debug the most common setup issues.
+  </Card>
+</Columns>

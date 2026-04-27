@@ -1,0 +1,49 @@
+---
+title: "Architecture"
+description: "How the Tandemn server, CLI, users, and GPU resources work together."
+icon: "network"
+---
+
+Tandemn uses a client-server architecture. Administrators operate the server, and users submit inference jobs through the CLI.
+
+## Components
+
+<Columns cols={2}>
+  <Card title="Tandemn server" icon="server">
+    The central service that receives job requests, tracks cluster state, and coordinates orchestration.
+  </Card>
+  <Card title="Tandemn CLI" icon="terminal">
+    The command line interface users install locally to check connectivity and submit workloads.
+  </Card>
+  <Card title="GPU resources" icon="cpu">
+    The accelerated machines available to execute inference workloads.
+  </Card>
+  <Card title="Batch inputs" icon="file-json">
+    JSONL prompt files that describe the work users want Tandemn to run.
+  </Card>
+</Columns>
+
+## Request flow
+
+<Steps>
+  <Step title="A user submits a job">
+    The user runs `tandemn deploy` with a model, JSONL prompt file, and SLO.
+  </Step>
+  <Step title="The server receives the job">
+    The server validates the request and evaluates the available cluster resources.
+  </Step>
+  <Step title="Tandemn builds an execution plan">
+    The orchestration layer decides how to place the workload across the available GPU pool.
+  </Step>
+  <Step title="The workload runs">
+    Tandemn executes the inference job and reports status through the user-facing workflow.
+  </Step>
+</Steps>
+
+## Why this model matters
+
+This separation lets infrastructure teams manage hardware and cluster policy centrally while application and ML teams get a simpler job submission interface.
+
+<Tip>
+  Treat the Tandemn server as shared infrastructure. Keep ownership, deployment, and monitoring responsibilities clear before inviting users onto the cluster.
+</Tip>

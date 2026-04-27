@@ -1,0 +1,67 @@
+---
+title: "Install the server"
+description: "Deploy the Tandemn server release with Docker Compose."
+sidebarTitle: "Install server"
+icon: "server"
+---
+
+The Tandemn server receives job requests from users and manages the cluster orchestration flow. Deploy it on a machine that is reachable by the users who will run the CLI.
+
+## Download the release
+
+```bash
+curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
+tar -xzf tandemn-0.0.1.tar.gz
+cd tandemn-0.0.1
+```
+
+## Configure the environment
+
+Copy the example environment file and update it for your deployment.
+
+```bash
+cp .env.example .env
+```
+
+Review the values in `.env` before starting the stack. At minimum, confirm any hostnames, ports, credentials, and cluster-specific settings expected by your release bundle.
+
+<Warning>
+  Do not commit `.env` files with secrets or deployment-specific credentials.
+</Warning>
+
+## Start Tandemn
+
+Pull the images and start the server stack.
+
+```bash
+docker compose pull
+docker compose up
+```
+
+For a background process, run Docker Compose in detached mode.
+
+```bash
+docker compose up -d
+```
+
+## Verify the server is reachable
+
+From a user machine, install the CLI and run:
+
+```bash
+export TD_SERVER_URL=<your-server-url>
+tandemn check
+```
+
+If the check fails, confirm the server process is running, the URL is correct, and the server port is reachable from the client network.
+
+## Next steps
+
+<Columns cols={2}>
+  <Card title="Install the CLI" icon="terminal" href="/getting-started/install-cli">
+    Set up the user-facing command line tool.
+  </Card>
+  <Card title="Configure the server" icon="settings" href="/admin/configuration">
+    Understand what belongs in `.env`.
+  </Card>
+</Columns>

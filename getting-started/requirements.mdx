@@ -1,0 +1,48 @@
+---
+title: "Requirements"
+description: "What you need before deploying Tandemn or using the CLI."
+icon: "list-check"
+---
+
+Tandemn has two parts: a server operated by an administrator and a CLI used by the people submitting inference jobs.
+
+## Server requirements
+
+The Tandemn server should run on a machine that can reach the accelerated workers it will manage and that users can reach over the network.
+
+- Docker with Docker Compose support
+- Network access from CLI users to the server
+- Access to the machines or GPU pool that will execute inference workloads
+- Permission to pull the Tandemn container images referenced by the release bundle
+
+<Note>
+  The server release includes a `docker-compose.yml` file and an `.env.example` file. Most server configuration starts by copying `.env.example` to `.env`.
+</Note>
+
+## CLI requirements
+
+Users need a Python environment and the URL of the Tandemn server.
+
+- Python 3.10 or newer
+- `pip`
+- The `tandemn` Python package
+- `TD_SERVER_URL` set to the server URL
+
+```bash
+pip install tandemn
+export TD_SERVER_URL=<your-server-url>
+tandemn check
+```
+
+## Recommended first setup
+
+For an initial evaluation, use one administrator-managed server and one CLI user. Verify connectivity with `tandemn check` before submitting real workloads.
+
+<Columns cols={2}>
+  <Card title="Install server" icon="server" href="/getting-started/install-server">
+    Bring up the Docker Compose stack.
+  </Card>
+  <Card title="Install CLI" icon="terminal" href="/getting-started/install-cli">
+    Set up a local CLI environment.
+  </Card>
+</Columns>

@@ -1,0 +1,46 @@
+---
+title: "Run your first job"
+description: "Submit a first batch inference job with Tandemn."
+sidebarTitle: "First job"
+icon: "rocket"
+---
+
+After the server is running and the CLI is connected, submit a job with a model, an input file, and an SLO.
+
+## Prepare a prompt file
+
+Use a JSONL file where each line is one request payload for the workload you want to run. Keep the first test small so you can confirm the end-to-end flow quickly.
+
+```json prompts.jsonl
+{"messages":[{"role":"user","content":"Summarize what batch inference is in one sentence."}]}
+{"messages":[{"role":"user","content":"Give me three reasons to use heterogeneous GPUs."}]}
+```
+
+## Submit the job
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+```
+
+The command sends the workload to the Tandemn server. Tandemn then chooses an execution plan across the available accelerated resources.
+
+## What the arguments mean
+
+- `Qwen/Qwen2.5-7B-Instruct` is the model identifier.
+- `prompts.jsonl` is the batch input file.
+- `--slo 4` is the service-level objective you want Tandemn to optimize around.
+
+<Note>
+  Use a model that your Tandemn deployment is configured to run. If a model cannot be scheduled, ask your administrator which models are currently available.
+</Note>
+
+## If something fails
+
+Start with the basics:
+
+- Run `tandemn check`.
+- Confirm `TD_SERVER_URL` points at the right server.
+- Confirm the JSONL file exists and is readable.
+- Confirm the model is available in your environment.
+
+See [Troubleshooting](/admin/troubleshooting) for more setup checks.

@@ -1,0 +1,33 @@
+---
+title: "tandemn check"
+description: "Verify that the Tandemn CLI can reach the server."
+sidebarTitle: "check"
+icon: "circle-check"
+---
+
+Use `tandemn check` before submitting jobs. It confirms that your CLI configuration points at a reachable Tandemn server.
+
+## Usage
+
+```bash
+export TD_SERVER_URL=<your-server-url>
+tandemn check
+```
+
+## When to run it
+
+- After installing the CLI
+- After changing `TD_SERVER_URL`
+- Before submitting a large workload
+- When debugging failed job submission
+
+## If it fails
+
+Check:
+
+- `TD_SERVER_URL` is set in the same terminal session.
+- The server URL is correct.
+- Your machine can reach the server network.
+- The server is running.
+
+See [Troubleshooting](/admin/troubleshooting) for a fuller checklist.

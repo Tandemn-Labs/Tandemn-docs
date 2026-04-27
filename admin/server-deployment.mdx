@@ -1,0 +1,53 @@
+---
+title: "Server deployment"
+description: "Operational guidance for running the Tandemn server."
+icon: "server-cog"
+---
+
+The Tandemn server should be treated as shared infrastructure. It receives job requests from users and coordinates execution across accelerated resources.
+
+## Deployment checklist
+
+<Steps>
+  <Step title="Choose a server host">
+    Pick a machine that can reach the GPU resources Tandemn will manage and that users can reach from their development environment.
+  </Step>
+  <Step title="Install Docker Compose support">
+    Confirm Docker and Docker Compose work before downloading the Tandemn release bundle.
+  </Step>
+  <Step title="Download the release">
+    Fetch the Tandemn server release bundle and unpack it on the server host.
+  </Step>
+  <Step title="Configure `.env`">
+    Copy `.env.example` to `.env` and fill in deployment-specific values.
+  </Step>
+  <Step title="Start services">
+    Run `docker compose pull` and `docker compose up -d`.
+  </Step>
+  <Step title="Verify from a client">
+    Run `tandemn check` from a separate machine using the public server URL.
+  </Step>
+</Steps>
+
+## Commands
+
+```bash
+curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
+tar -xzf tandemn-0.0.1.tar.gz
+cd tandemn-0.0.1
+cp .env.example .env
+docker compose pull
+docker compose up -d
+```
+
+## Operating model
+
+The administrator owns the server deployment, environment configuration, connectivity, and cluster access. Users own their prompt files, model choices, and CLI environment.
+
+<Tip>
+  Document the server URL, supported models, and expected SLO values for your users before sharing access.
+</Tip>
+
+## Updates
+
+When a new Tandemn server release is available, review the release notes, back up deployment-specific configuration, and then update the bundle in a controlled maintenance window.

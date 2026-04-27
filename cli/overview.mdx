@@ -1,0 +1,50 @@
+---
+title: "CLI overview"
+description: "The Tandemn command line workflow."
+sidebarTitle: "Overview"
+icon: "terminal"
+---
+
+The Tandemn CLI lets users check server connectivity and submit inference jobs.
+
+## Install
+
+```bash
+pip install tandemn
+```
+
+## Configure
+
+```bash
+export TD_SERVER_URL=<your-server-url>
+```
+
+## Core commands
+
+<Columns cols={2}>
+  <Card title="check" icon="circle-check" href="/cli/check">
+    Verify that the CLI can reach the Tandemn server.
+  </Card>
+  <Card title="deploy" icon="rocket" href="/cli/deploy">
+    Submit an inference job with a model, input file, and SLO.
+  </Card>
+</Columns>
+
+## Typical workflow
+
+```bash
+pip install tandemn
+export TD_SERVER_URL=<your-server-url>
+tandemn check
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+```
+
+## Responsibilities
+
+The CLI user is responsible for:
+
+- Installing the CLI
+- Pointing it at the correct Tandemn server
+- Preparing valid input files
+- Choosing a supported model
+- Sharing useful error details with the administrator when something fails

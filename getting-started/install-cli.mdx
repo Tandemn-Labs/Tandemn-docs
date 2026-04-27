@@ -1,0 +1,56 @@
+---
+title: "Install the CLI"
+description: "Install the Tandemn CLI and connect it to a Tandemn server."
+sidebarTitle: "Install CLI"
+icon: "terminal"
+---
+
+The Tandemn CLI is the user-facing tool for checking connectivity and submitting inference jobs.
+
+## Install
+
+Install the package in your preferred Python environment.
+
+<CodeGroup>
+
+```bash pip
+pip install tandemn
+```
+
+```bash venv
+python -m venv .venv
+source .venv/bin/activate
+pip install tandemn
+```
+
+</CodeGroup>
+
+## Connect to the server
+
+Set `TD_SERVER_URL` to the URL provided by your Tandemn administrator.
+
+```bash
+export TD_SERVER_URL=<your-server-url>
+```
+
+Persist the variable in your shell profile if you use the same server regularly.
+
+```bash
+echo 'export TD_SERVER_URL=<your-server-url>' >> ~/.zshrc
+```
+
+## Check connectivity
+
+```bash
+tandemn check
+```
+
+Successful output means the CLI can reach the Tandemn server and you can submit jobs.
+
+<Tip>
+  If your organization uses multiple Tandemn environments, keep separate shell profiles or terminal sessions for development, staging, and production.
+</Tip>
+
+## Next step
+
+Submit your first inference job in [Run your first job](/getting-started/run-first-job).
