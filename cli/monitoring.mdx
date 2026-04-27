@@ -1,0 +1,72 @@
+---
+title: "Monitoring and operations"
+description: "Monitor Tandemn jobs, metrics, clusters, logs, and cleanup."
+sidebarTitle: "Monitoring"
+icon: "activity"
+---
+
+Use the monitoring commands after a job has been submitted with `tandemn deploy`.
+
+## Progress and dashboard
+
+```bash
+tandemn progress
+tandemn progress <job_id>
+tandemn web
+```
+
+| Command | Description |
+| --- | --- |
+| `tandemn progress` | Live progress bar for the active or most recent job. |
+| `tandemn progress <job_id>` | Live progress bar for a specific job. |
+| `tandemn web` | Open the real-time web dashboard in a browser. |
+
+The dashboard shows workload details, chunk progress, replica phase state, cost, ETA, throughput, quota usage, event logs, and metrics charts. It uses server-sent events with polling fallback.
+
+## Job and cluster state
+
+```bash
+tandemn status
+tandemn clusters
+tandemn logs [cluster]
+```
+
+| Command | Description |
+| --- | --- |
+| `tandemn status` | List jobs known to the control plane. |
+| `tandemn clusters` | Show active SkyPilot clusters. |
+| `tandemn logs [cluster]` | Stream logs from a SkyPilot cluster. |
+
+## Metrics
+
+```bash
+tandemn metrics <job_id>
+tandemn metrics <job_id> --watch
+tandemn metrics <job_id> --replica <rid>
+tandemn metrics <job_id> --compare
+tandemn stream <job_id>
+```
+
+| Command | Description |
+| --- | --- |
+| `tandemn metrics <job_id>` | Latest vLLM metrics snapshot. |
+| `tandemn metrics <job_id> --watch` | Refresh metrics every two seconds. |
+| `tandemn metrics <job_id> --replica <rid>` | Show metrics for a specific replica. |
+| `tandemn metrics <job_id> --compare` | Show aggregated and per-replica metrics side by side. |
+| `tandemn stream <job_id>` | Stream live metrics at roughly one event per second. |
+
+Metrics can include throughput, queue depth, KV cache utilization, scheduler state, GPU utilization, latency, and completion counters, depending on the replica state and server configuration.
+
+## Cleanup
+
+```bash
+tandemn destroy <job_id>
+tandemn destroy --all
+```
+
+| Command | Description |
+| --- | --- |
+| `tandemn destroy <job_id>` | Tear down clusters and Redis state for one job. |
+| `tandemn destroy --all` | Tear down all `tandemn` clusters. |
+
+Clusters are destroyed by default after job completion. Use `--persist` with `tandemn deploy` when you want to keep clusters alive.

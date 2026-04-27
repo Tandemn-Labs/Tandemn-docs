@@ -9,11 +9,17 @@ After the server is running and the CLI is connected, submit a job with a model,
 
 ## Prepare a prompt file
 
-Use a JSONL file where each line is one request payload for the workload you want to run. Keep the first test small so you can confirm the end-to-end flow quickly.
+Use OpenAI-style batch JSONL where each line is one request payload. Keep the first test small so you can confirm the end-to-end flow quickly.
 
 ```json prompts.jsonl
-{"messages":[{"role":"user","content":"Summarize what batch inference is in one sentence."}]}
-{"messages":[{"role":"user","content":"Give me three reasons to use heterogeneous GPUs."}]}
+{"custom_id":"req-1","method":"POST","url":"/v1/chat/completions","body":{"model":"placeholder","messages":[{"role":"user","content":"Summarize what batch inference is in one sentence."}],"max_tokens":256}}
+{"custom_id":"req-2","method":"POST","url":"/v1/chat/completions","body":{"model":"placeholder","messages":[{"role":"user","content":"Give me three reasons to use heterogeneous GPUs."}],"max_tokens":256}}
+```
+
+## Preview the placement
+
+```bash
+tandemn plan Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
 ```
 
 ## Submit the job
@@ -28,11 +34,16 @@ The command sends the workload to the Tandemn server. Tandemn then chooses an ex
 
 - `Qwen/Qwen2.5-7B-Instruct` is the model identifier.
 - `prompts.jsonl` is the batch input file.
-- `--slo 4` is the service-level objective you want Tandemn to optimize around.
+- `--slo 4` is a four-hour deadline.
 
-<Note>
-  Use a model that your Tandemn deployment is configured to run. If a model cannot be scheduled, ask your administrator which models are currently available.
-</Note>
+## Monitor progress
+
+```bash
+tandemn progress
+tandemn web
+```
+
+> Use a model that your Tandemn deployment is configured to run. If a model cannot be scheduled, ask your administrator which models are currently available.
 
 ## If something fails
 

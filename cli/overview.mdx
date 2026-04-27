@@ -1,11 +1,15 @@
 ---
 title: "CLI overview"
-description: "The Tandemn command line workflow."
+description: "The Tandemn System command line workflow."
 sidebarTitle: "Overview"
 icon: "terminal"
 ---
 
-The Tandemn CLI lets users check server connectivity and submit inference jobs.
+The Tandemn CLI is the main interface for Tandemn System. Use it to check server connectivity, run placement planning, submit batch inference jobs, scale replicas, monitor progress, and inspect completed runs.
+
+Tandemn System is self-hosted. You run the control plane in your own AWS account, point the CLI at that server, and submit workloads from your environment. Your data stays inside your infrastructure.
+
+> Naming note: the product is Tandemn System. Parts of the repository, CLI output, and environment variables may still reference the legacy codename `orca`.
 
 ## Install
 
@@ -19,14 +23,32 @@ pip install tandemn
 export TD_SERVER_URL=<your-server-url>
 ```
 
+If the server requires API key authentication, also set:
+
+```bash
+export TD_API_KEY=<your-api-key>
+```
+
 ## Core commands
 
 <Columns cols={2}>
   <Card title="check" icon="circle-check" href="/cli/check">
     Verify that the CLI can reach the Tandemn server.
   </Card>
-  <Card title="deploy" icon="rocket" href="/cli/deploy">
-    Submit an inference job with a model, input file, and SLO.
+  <Card title="plan and deploy" icon="rocket" href="/cli/deploy">
+    Preview or launch a job with a model, input file, and deadline.
+  </Card>
+  <Card title="replicas" icon="git-branch" href="/cli/replicas">
+    Add, kill, or hot-swap replica clusters while work is queued.
+  </Card>
+  <Card title="monitoring" icon="activity" href="/cli/monitoring">
+    Watch progress, metrics, logs, clusters, and the dashboard.
+  </Card>
+  <Card title="analytics" icon="chart-line" href="/cli/analytics">
+    Review completed runs and scheduler timeseries.
+  </Card>
+  <Card title="input format" icon="file-json" href="/cli/input-format">
+    Build OpenAI-compatible JSONL batch files.
   </Card>
 </Columns>
 
@@ -36,8 +58,32 @@ export TD_SERVER_URL=<your-server-url>
 pip install tandemn
 export TD_SERVER_URL=<your-server-url>
 tandemn check
+tandemn plan Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
 tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+tandemn progress
 ```
+
+## Command groups
+
+| Command | Purpose |
+| --- | --- |
+| `tandemn check` | Verify CLI connectivity to the control plane. |
+| `tandemn plan <model> <input>` | Show a placement plan without launching. |
+| `tandemn deploy <model> <input>` | Run a batch job. The solver picks GPU and parallelism unless you override them. |
+| `tandemn add <job_id> N` | Add replicas to a running job. |
+| `tandemn kill <job_id>` | Kill one or more replicas. |
+| `tandemn swap <job_id>` | Hot-swap all replicas to a new GPU configuration. |
+| `tandemn progress [job_id]` | Show a live progress bar. |
+| `tandemn web` | Open the real-time dashboard. |
+| `tandemn status` | List jobs. |
+| `tandemn metrics <job_id>` | Show vLLM metrics. |
+| `tandemn stream <job_id>` | Stream live metrics events. |
+| `tandemn logs [cluster]` | Stream SkyPilot cluster logs. |
+| `tandemn clusters` | Show active clusters. |
+| `tandemn destroy <job_id>` | Tear down job clusters and Redis state. |
+| `tandemn history` | Browse completed runs. |
+| `tandemn inspect <run_id>` | Show a full run report. |
+| `tandemn timeseries <run_id>` | Show scheduler timeseries for a completed run. |
 
 ## Responsibilities
 

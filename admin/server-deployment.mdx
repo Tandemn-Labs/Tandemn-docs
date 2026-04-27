@@ -10,19 +10,22 @@ The Tandemn server should be treated as shared infrastructure. It receives job r
 
 <Steps>
   <Step title="Choose a server host">
-    Pick a machine that can reach the GPU resources Tandemn will manage and that users can reach from their development environment.
+    Pick a machine in your AWS environment that CLI users and EC2 inference replicas can reach.
   </Step>
-  <Step title="Install Docker Compose support">
-    Confirm Docker and Docker Compose work before downloading the Tandemn release bundle.
+  <Step title="Prepare AWS access">
+    Configure AWS credentials, IAM permissions, S3 bucket access, and quota visibility.
   </Step>
-  <Step title="Download the release">
-    Fetch the Tandemn server release bundle and unpack it on the server host.
+  <Step title="Clone the server repository">
+    Fetch the Tandemn server repository and submodules.
   </Step>
-  <Step title="Configure `.env`">
-    Copy `.env.example` to `.env` and fill in deployment-specific values.
+  <Step title="Run setup">
+    Install dependencies, verify AWS and Redis connectivity, and create `.env`.
   </Step>
-  <Step title="Start services">
-    Run `docker compose pull` and `docker compose up -d`.
+  <Step title="Start Redis">
+    Run Redis for chunked multi-replica jobs.
+  </Step>
+  <Step title="Start the control plane">
+    Run `python server.py --url <public-or-private-url>`.
   </Step>
   <Step title="Verify from a client">
     Run `tandemn check` from a separate machine using the public server URL.
@@ -32,22 +35,23 @@ The Tandemn server should be treated as shared infrastructure. It receives job r
 ## Commands
 
 ```bash
-curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
-tar -xzf tandemn-0.0.1.tar.gz
-cd tandemn-0.0.1
-cp .env.example .env
-docker compose pull
-docker compose up -d
+git clone --recurse-submodules https://github.com/Tandemn-Labs/Tandemn-server.git
+cd Tandemn-server
+bash setup.sh
+docker run -d -p 6379:6379 redis
+python server.py --url https://your-public-url.example.com
 ```
 
 ## Operating model
 
-The administrator owns the server deployment, environment configuration, connectivity, and cluster access. Users own their prompt files, model choices, and CLI environment.
+The administrator owns the server deployment, AWS credentials, S3 bucket, Redis, environment configuration, network exposure, and cluster access. Users own their prompt files, model choices, SLOs, and CLI environment.
 
-<Tip>
-  Document the server URL, supported models, and expected SLO values for your users before sharing access.
-</Tip>
+> Document the server URL, supported models, and expected SLO values for your users before sharing access.
+
+## Network model
+
+For local development, the control plane can be exposed through a tunnel or VPN. For production, deploy the control plane on a small EC2 instance in the same VPC as the inference replicas to avoid public exposure and tunnel latency.
 
 ## Updates
 
-When a new Tandemn server release is available, review the release notes, back up deployment-specific configuration, and then update the bundle in a controlled maintenance window.
+When a new Tandemn server version is available, review the release notes, back up deployment-specific configuration, and update in a controlled maintenance window.

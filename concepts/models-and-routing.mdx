@@ -4,7 +4,7 @@ description: "How model selection and hardware routing fit into Tandemn."
 icon: "shuffle"
 ---
 
-Tandemn users submit jobs with a model identifier. The server uses the deployment's available resources and configuration to decide how that workload should run.
+Tandemn users submit jobs with a model identifier, a JSONL workload, and a deadline. The control plane uses the deployment's available resources and configuration to decide how that workload should run.
 
 ## Model identifiers
 
@@ -14,7 +14,22 @@ The quickstart uses a Hugging Face style model identifier:
 tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
 ```
 
-Use model identifiers that your Tandemn deployment supports. Availability depends on the server configuration, the model artifacts your organization allows, and the GPU resources attached to the cluster.
+Use model identifiers that your Tandemn deployment supports. Tandemn System can run HuggingFace models compatible with vLLM, and you can override placement manually for models outside the performance database.
+
+```bash
+tandemn deploy <any-hf-model> input.jsonl --gpu A10G --tp 1
+```
+
+## Placement solvers
+
+`tandemn plan` and `tandemn deploy` can show recommendations from two built-in solvers:
+
+| Solver | Description |
+| --- | --- |
+| LLM Advisor | Uses the performance database and an LLM reasoning layer to rank placements by cost, throughput, and SLO feasibility. |
+| Roofline solver | Uses GPU bandwidth, TFLOPS, memory, and model constraints. No API key is required. |
+
+If the advisor is unavailable, Tandemn falls back to the roofline solver. If `KOI_SERVICE_URL` is set, Tandemn can also show an optional Koi recommendation.
 
 ## Routing goals
 
@@ -29,7 +44,19 @@ The exact placement decision depends on deployment-specific configuration, but t
 - Requested SLO
 - Available GPUs
 - Current cluster load
+- AWS quota and capacity
+- Spot or on-demand launch mode
+- Tensor and pipeline parallelism settings
 
-<Note>
-  If a model cannot be scheduled, the first thing to check is whether the model is enabled in the deployment and whether compatible resources are available.
-</Note>
+## Supported hardware
+
+| GPU | AWS instance | VRAM |
+| --- | --- | --- |
+| A100 80GB | `p4d.24xlarge`, `p4de.24xlarge` | 8 x 80GB |
+| H100 80GB | `p5.48xlarge` | 8 x 80GB |
+| L40S 48GB | `g6e.12xlarge`, `g6e.24xlarge`, `g6e.48xlarge` | 4 x / 4 x / 8 x 48GB |
+| A10G 24GB | `g5.12xlarge`, `g5.48xlarge` | 4 x / 8 x 24GB |
+
+The solver searches across GPU types and parallelism configurations to find a placement that fits the model in memory and meets the requested deadline.
+
+> If a model cannot be scheduled, the first thing to check is whether the model is enabled in the deployment and whether compatible resources are available.

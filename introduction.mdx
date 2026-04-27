@@ -4,7 +4,7 @@ description: "Learn what Tandemn does, who it is for, and where to start."
 icon: "house"
 ---
 
-Tandemn helps teams run inference workloads across accelerated infrastructure without hand-tuning every model, GPU, and batch job. It provides a server that manages the cluster and a CLI that users can use to submit inference jobs.
+Tandemn System helps teams run inference workloads across accelerated infrastructure without hand-tuning every model, GPU, and batch job. It provides a self-hosted control plane that manages orchestration and a CLI that users can use to submit inference jobs.
 
 Instead of sending every workload to the newest and most expensive accelerator, Tandemn can route jobs across heterogeneous GPU pools and use the hardware that best matches the workload's latency and throughput requirements.
 
@@ -16,7 +16,7 @@ Instead of sending every workload to the newest and most expensive accelerator, 
     Learn how the server, users, GPU workers, and job scheduler fit together.
   </Card>
   <Card title="Set up a cluster" icon="server" href="/getting-started/install-server" cta="Deploy server">
-    Bring up Tandemn's server using the release bundle and Docker Compose.
+    Install the control plane, configure AWS, and start the server.
   </Card>
   <Card title="Use the CLI" icon="terminal" href="/cli/overview" cta="Open CLI reference">
     Check connectivity and submit jobs from a local Python environment.
@@ -25,7 +25,7 @@ Instead of sending every workload to the newest and most expensive accelerator, 
 
 ## What Tandemn is for
 
-Tandemn is designed for teams that already have, or plan to operate, accelerated compute and want a simpler way to run inference workloads across that capacity.
+Tandemn System is designed for teams that already have, or plan to operate, accelerated compute and want a simpler way to run inference workloads across that capacity.
 
 - **Infrastructure teams** can expose a single service for users instead of asking each team to manage hardware placement.
 - **ML and application teams** can submit jobs through the CLI without deciding which machine or GPU should run them.
@@ -35,7 +35,7 @@ Tandemn is designed for teams that already have, or plan to operate, accelerated
 
 <Steps>
   <Step title="An administrator starts the Tandemn server">
-    The server is deployed on a machine that users can reach over the network. It manages cluster state and receives inference job requests.
+    The control plane is deployed on a machine that users and EC2 replicas can reach over the network. It manages cluster state and receives inference job requests.
   </Step>
   <Step title="Users install the Tandemn CLI">
     Users install the `tandemn` Python package, set `TD_SERVER_URL`, and check connectivity.

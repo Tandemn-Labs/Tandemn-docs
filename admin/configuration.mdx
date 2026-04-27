@@ -4,15 +4,15 @@ description: "How to approach Tandemn server configuration."
 icon: "sliders-horizontal"
 ---
 
-Tandemn server configuration starts from the `.env.example` file included in the release bundle.
+Tandemn server configuration starts from the `.env` file created by `setup.sh`. Use the repository's example environment values as the source of truth for the version you are running.
 
 ## Configure from the example
 
 ```bash
-cp .env.example .env
+bash setup.sh
 ```
 
-Open `.env`, review every value, and update it for your deployment. The exact fields can change between releases, so use the bundled `.env.example` as the source of truth for that release.
+Open the generated `.env`, review every value, and update it for your deployment. The exact fields can change between releases, so use the repository's example environment values as the source of truth for that release.
 
 ## Configuration principles
 
@@ -20,6 +20,10 @@ Open `.env`, review every value, and update it for your deployment. The exact fi
 - Do not commit `.env` to source control.
 - Use separate `.env` files for separate environments.
 - Record which server URL users should set in `TD_SERVER_URL`.
+- Set `S3_UPLOAD_BUCKET` to an existing bucket in your AWS account.
+- Set `HF_TOKEN` when running gated HuggingFace models.
+- Set `TD_API_KEY` when the control plane is exposed outside a private network.
+- Leave `KOI_SERVICE_URL` unset unless you intentionally enable optional Koi integration.
 - Keep model availability and cluster assumptions documented for users.
 
 ## User-facing value
@@ -28,6 +32,12 @@ Users need one configuration value to start:
 
 ```bash
 export TD_SERVER_URL=<your-server-url>
+```
+
+If API key authentication is enabled, users also need:
+
+```bash
+export TD_API_KEY=<your-api-key>
 ```
 
 After that, they can verify access with:
@@ -44,4 +54,5 @@ When onboarding a new user, give them:
 - Supported model identifiers
 - Expected input file format
 - Expected SLO conventions
+- Whether `TD_API_KEY` is required
 - A support contact for failed jobs or connectivity issues

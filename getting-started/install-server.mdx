@@ -1,59 +1,64 @@
 ---
 title: "Install the server"
-description: "Deploy the Tandemn server release with Docker Compose."
+description: "Install and start the Tandemn System control plane."
 sidebarTitle: "Install server"
 icon: "server"
 ---
 
-The Tandemn server receives job requests from users and manages the cluster orchestration flow. Deploy it on a machine that is reachable by the users who will run the CLI.
+The Tandemn System control plane receives job requests from users, runs placement planning, launches replicas through SkyPilot, coordinates chunks through Redis, and writes output to S3. Deploy it in your AWS environment on a host that CLI users and EC2 replicas can reach.
 
-## Download the release
-
-```bash
-curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
-tar -xzf tandemn-0.0.1.tar.gz
-cd tandemn-0.0.1
-```
-
-## Configure the environment
-
-Copy the example environment file and update it for your deployment.
+## Clone the repository
 
 ```bash
-cp .env.example .env
+git clone --recurse-submodules https://github.com/Tandemn-Labs/Tandemn-server.git
+cd Tandemn-server
 ```
 
-Review the values in `.env` before starting the stack. At minimum, confirm any hostnames, ports, credentials, and cluster-specific settings expected by your release bundle.
+## Run setup
 
-<Warning>
-  Do not commit `.env` files with secrets or deployment-specific credentials.
-</Warning>
-
-## Start Tandemn
-
-Pull the images and start the server stack.
+`setup.sh` installs Python dependencies, verifies AWS and Redis connectivity, and creates your `.env` file.
 
 ```bash
-docker compose pull
-docker compose up
+bash setup.sh
 ```
 
-For a background process, run Docker Compose in detached mode.
+Review `.env` before starting the control plane. At minimum, confirm:
+
+- `S3_UPLOAD_BUCKET`
+- `HF_TOKEN`, if you use gated models
+- `TD_API_KEY`, if the control plane is reachable outside a private network
+- `KOI_SERVICE_URL`, only if you are enabling optional Koi integration
+
+> Do not commit `.env` files with secrets or deployment-specific credentials.
+
+## Start Redis
 
 ```bash
-docker compose up -d
+docker run -d -p 6379:6379 redis
 ```
 
-## Verify the server is reachable
+Redis is required for multi-replica chunked jobs.
 
-From a user machine, install the CLI and run:
+## Download the performance database
+
+The LLM placement advisor uses a performance database that is not included in the repository.
 
 ```bash
-export TD_SERVER_URL=<your-server-url>
-tandemn check
+curl -L https://github.com/Tandemn-Labs/LLM_placement_solver/releases/download/aiconfigurator-v1/data.csv \
+  -o LLM_placement_solver/llm_advisor/data/aiconfigurator/data.csv
 ```
 
-If the check fails, confirm the server process is running, the URL is correct, and the server port is reachable from the client network.
+Without this dataset, `tandemn plan` falls back to the roofline solver.
+
+## Start the control plane
+
+Set the public URL that EC2 replicas will use to call back to the control plane.
+
+```bash
+python server.py --url https://your-public-url.example.com
+```
+
+For local development, you can use a tunnel or VPN endpoint. For production, run the control plane on a small EC2 instance in the same VPC as your inference replicas.
 
 ## Next steps
 

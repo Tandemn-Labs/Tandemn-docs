@@ -22,7 +22,7 @@ The current docs focus on batch inference jobs submitted through the CLI. Batch 
 
 ## What does a user need to get started?
 
-A user needs the Tandemn CLI, the server URL from an administrator, and a valid prompt file.
+A user needs the Tandemn CLI, the server URL from an administrator, and a valid OpenAI-style JSONL input file.
 
 ```bash
 pip install tandemn
@@ -32,7 +32,7 @@ tandemn check
 
 ## What does an administrator need to get started?
 
-An administrator needs a machine with Docker Compose support, access to the cluster resources Tandemn will manage, and the Tandemn server release bundle.
+An administrator needs Python 3.12+, AWS credentials, IAM access for EC2/S3/service quotas, an S3 bucket, Redis, and a network-reachable host for the self-hosted control plane.
 
 ## How do I know which models are available?
 

@@ -1,0 +1,63 @@
+---
+title: "Replica operations"
+description: "Add, kill, and hot-swap Tandemn replica clusters."
+sidebarTitle: "Replicas"
+icon: "git-branch"
+---
+
+Replica commands operate on running jobs that use chunked execution. New replicas join the same Redis chunk queue, and killed replicas have in-flight chunks reclaimed and returned to pending.
+
+## Add replicas
+
+```bash
+tandemn add <job_id> 2
+tandemn add <job_id> 3 --gpu L40S --tp 4
+```
+
+The first command adds two replicas that inherit the job's current GPU configuration. The second command adds three L40S replicas, creating a heterogeneous fleet.
+
+| Argument or flag | Description |
+| --- | --- |
+| `job_id` | Running job to scale. |
+| `N` | Number of replicas to add. |
+| `--gpu <type>` | Optional GPU type override for the new replicas. |
+| `--tp N` | Optional tensor parallelism override. |
+| `--pp N` | Optional pipeline parallelism override. |
+| `--on-demand` | Launch new replicas on on-demand instances instead of spot. |
+
+## Kill replicas
+
+```bash
+tandemn kill <job_id> --replica <rid>
+tandemn kill <job_id> --replica r0 --replica r1
+```
+
+Use `tandemn kill` to terminate specific replicas. Any chunk leased by a killed replica is reclaimed and returned to the queue.
+
+| Flag | Description |
+| --- | --- |
+| `--replica <rid>` | Replica ID to kill. Repeat the flag to kill multiple replicas. |
+
+## Hot-swap replicas
+
+```bash
+tandemn swap <job_id> --gpu A100 --tp 4 --replicas 2
+tandemn swap <job_id> --gpu L40S --tp 1 --ready-threshold 2 --on-demand
+```
+
+Hot-swap replaces all replicas with a new GPU configuration mid-job. Tandemn launches the replacement replicas first, waits for them to begin processing, and then tears down the old replicas.
+
+| Flag | Description |
+| --- | --- |
+| `--gpu <type>` | GPU type for the replacement fleet. |
+| `--tp N` | Tensor parallelism for replacement replicas. |
+| `--pp N` | Pipeline parallelism for replacement replicas. |
+| `--replicas N` | Number of replacement replicas. |
+| `--ready-threshold N` | Number of new replicas that must be ready before old replicas are removed. |
+| `--on-demand` | Use on-demand instances for the replacement fleet. |
+
+## Operational notes
+
+- Replica operations require Redis-backed chunk coordination.
+- Killed replicas do not lose completed chunks.
+- Hot-swap is designed to avoid dropped chunks by keeping the shared queue intact.

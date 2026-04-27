@@ -15,7 +15,19 @@ Tandemn is operated by users through the CLI. Start by checking connectivity, th
     Verify that your CLI can reach the Tandemn server.
   </Card>
   <Card title="tandemn deploy" icon="rocket" href="/cli/deploy">
-    Submit a model inference job with a JSONL input file.
+    Plan or submit a model inference job with a JSONL input file.
+  </Card>
+  <Card title="Replica operations" icon="git-branch" href="/cli/replicas">
+    Add, kill, or hot-swap replicas while a job is running.
+  </Card>
+  <Card title="Monitoring" icon="activity" href="/cli/monitoring">
+    Watch progress, metrics, logs, clusters, and the web dashboard.
+  </Card>
+  <Card title="Analytics" icon="chart-line" href="/cli/analytics">
+    Inspect completed runs, per-replica summaries, and scheduler timeseries.
+  </Card>
+  <Card title="Input format" icon="file-json" href="/cli/input-format">
+    Prepare OpenAI-style batch JSONL workloads.
   </Card>
 </Columns>
 
@@ -25,5 +37,7 @@ Tandemn is operated by users through the CLI. Start by checking connectivity, th
 pip install tandemn
 export TD_SERVER_URL=<your-server-url>
 tandemn check
+tandemn plan Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
 tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+tandemn progress
 ```

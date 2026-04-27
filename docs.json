@@ -4,9 +4,19 @@
   "name": "Tandemn",
   "description": "Tandemn is an AI infrastructure platform for running inference workloads across heterogeneous GPU clusters. Tandemn schedules jobs, chooses an efficient hardware mix, and gives teams a simple CLI and server workflow for batch inference.",
   "colors": {
-    "primary": "#00f4fd",
-    "light": "#00f4fd",
-    "dark": "#00f4fd"
+    "primary": "#FFFFFF",
+    "light": "#FFFFFF",
+    "dark": "#A3A3A3"
+  },
+  "appearance": {
+    "default": "dark",
+    "strict": true
+  },
+  "background": {
+    "color": {
+      "light": "#0A0A0A",
+      "dark": "#0A0A0A"
+    }
   },
   "icons": {
     "library": "lucide"
@@ -66,7 +76,11 @@
         "pages": [
           "cli/overview",
           "cli/check",
-          "cli/deploy"
+          "cli/deploy",
+          "cli/replicas",
+          "cli/monitoring",
+          "cli/analytics",
+          "cli/input-format"
         ]
       },
       {

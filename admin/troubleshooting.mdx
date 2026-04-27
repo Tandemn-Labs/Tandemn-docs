@@ -26,21 +26,21 @@ If it still fails:
 - Confirm the server URL includes the correct host and port.
 - Confirm your network can reach the server.
 - Confirm any firewall or VPN rules allow the connection.
+- Confirm `TD_API_KEY` is set if the server requires authentication.
 
-## Docker Compose does not start
+## Control plane does not start
 
-On the server host, check Docker and Compose:
+On the server host, check Python and setup output:
 
 ```bash
-docker --version
-docker compose version
+python --version
+sky check
 ```
 
-Then pull and start the services again:
+Confirm Redis is running if you use chunked execution:
 
 ```bash
-docker compose pull
-docker compose up
+docker run -d -p 6379:6379 redis
 ```
 
 ## A job is rejected
@@ -52,13 +52,16 @@ Common causes:
 - The prompt file is not valid JSONL.
 - The requested SLO is outside the conventions used by your deployment.
 - The cluster does not currently have compatible capacity.
+- `S3_UPLOAD_BUCKET` is unset or points at a bucket the control plane cannot write to.
+- AWS credentials lack EC2, S3, or service quota permissions.
+- The performance database is missing and the advisor is unavailable.
 
 ## A prompt file fails
 
 Validate that each line is a complete JSON object.
 
 ```json
-{"messages":[{"role":"user","content":"Hello"}]}
+{"custom_id":"req-1","method":"POST","url":"/v1/chat/completions","body":{"model":"placeholder","messages":[{"role":"user","content":"Hello"}],"max_tokens":256}}
 ```
 
 Avoid trailing commas and multi-line JSON objects in JSONL files.

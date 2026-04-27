@@ -1,0 +1,75 @@
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#body-content,
+#background-color {
+  background: #0a0a0a;
+}
+
+#content,
+mdx-content {
+  color: #d4d4d4;
+}
+
+#page-title,
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+mdx-content h1,
+mdx-content h2,
+mdx-content h3,
+mdx-content h4,
+#content strong,
+mdx-content strong {
+  color: #ffffff;
+}
+
+#content p,
+#content li,
+#content td,
+#content th,
+#content blockquote,
+mdx-content p,
+mdx-content li,
+mdx-content td,
+mdx-content th,
+mdx-content blockquote {
+  color: #d4d4d4;
+}
+
+#content a,
+mdx-content a,
+link,
+navbar-link,
+toc-item,
+sidebar-group,
+sidebar-title {
+  color: #f5f5f5;
+}
+
+#content a:hover,
+mdx-content a:hover,
+link:hover,
+navbar-link:hover,
+toc-item:hover,
+sidebar-group:hover {
+  color: #ffffff;
+}
+
+card {
+  background: #111111;
+  border-color: #262626;
+}
+
+callout,
+code-block {
+  border-color: #262626;
+}
+
+blockquote {
+  border-color: #404040;
+}

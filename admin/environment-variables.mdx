@@ -5,16 +5,18 @@ sidebarTitle: "Env variables"
 icon: "list-tree"
 ---
 
-This page lists the environment variables that users are expected to set directly. Server-side variables are defined by the `.env.example` file included in each Tandemn server release.
+This page lists the environment variables users and administrators commonly touch. Server-side values live in the control plane `.env` file created by `setup.sh`.
 
 ## CLI variables
 
 | Variable | Required | Description |
 | --- | --- | --- |
 | `TD_SERVER_URL` | Yes | URL of the Tandemn server that the CLI should contact. |
+| `TD_API_KEY` | If enabled | API key for deployments that require authenticated client and replica communication. |
 
 ```bash
 export TD_SERVER_URL=<your-server-url>
+export TD_API_KEY=<your-api-key>
 ```
 
 Verify the value with:
@@ -26,21 +28,23 @@ tandemn check
 
 ## Server variables
 
-Server variables are release-specific. After downloading the server bundle, inspect `.env.example`:
+Server variables are release-specific. After running `bash setup.sh`, inspect `.env`.
 
-```bash
-cp .env.example .env
-```
+| Variable | Required | Description |
+| --- | --- | --- |
+| `S3_UPLOAD_BUCKET` | Yes | Existing S3 bucket for uploaded workloads, chunk outputs, assembled output, and metrics. |
+| `HF_TOKEN` | For gated models | HuggingFace token for models such as Llama and Gemma. |
+| `TD_API_KEY` | Recommended | Shared API key for control plane authentication. |
+| `KOI_SERVICE_URL` | Optional | URL for optional Koi recommendations and lifecycle callbacks. Leave unset for standalone Orca behavior. |
+| `ANTHROPIC_API_KEY` | For LLM advisor | Enables the LLM placement advisor when the performance database is installed. |
+| `ORCA_URL` | Koi service only | URL Koi uses to call back to Orca/Tandemn System. |
 
-Use `.env` for the actual deployment values.
-
-<Warning>
-  Do not expose secrets, credentials, tokens, or private hostnames in public documentation or committed files.
-</Warning>
+> Do not expose secrets, credentials, tokens, or private hostnames in public documentation or committed files.
 
 ## Common mistakes
 
 - Setting `TD_SERVER_URL` in one shell and running `tandemn` from another shell.
 - Using a server URL that is reachable from the admin machine but not from the user's network.
-- Copying `.env.example` but leaving placeholder values unchanged.
+- Leaving `S3_UPLOAD_BUCKET` pointed at a bucket that does not exist.
+- Setting `KOI_SERVICE_URL` accidentally when you want standalone behavior.
 - Committing `.env` by accident.

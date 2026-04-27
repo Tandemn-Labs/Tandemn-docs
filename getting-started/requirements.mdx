@@ -4,26 +4,34 @@ description: "What you need before deploying Tandemn or using the CLI."
 icon: "list-check"
 ---
 
-Tandemn has two parts: a server operated by an administrator and a CLI used by the people submitting inference jobs.
+Tandemn System has two parts: a self-hosted control plane operated by an administrator and a CLI used by the people submitting inference jobs. The current deployment target is AWS.
 
 ## Server requirements
 
-The Tandemn server should run on a machine that can reach the accelerated workers it will manage and that users can reach over the network.
+| Requirement | Notes |
+| --- | --- |
+| Python 3.12+ | Required for the control plane. |
+| `uv` | Required for setup and dependency management. |
+| SkyPilot | Installed by `setup.sh`; run `sky check` to verify cloud access. |
+| AWS credentials | Use `aws configure` or `~/.aws/credentials`. |
+| AWS IAM permissions | EC2 launch/terminate, S3 read/write to your bucket, and service quota read access. |
+| S3 bucket | Must exist in your AWS account and be set as `S3_UPLOAD_BUCKET` in `.env`. |
+| Redis | Required for multi-replica chunked jobs. |
+| HuggingFace token | Required for gated models such as Llama and Gemma; set `HF_TOKEN` in `.env`. |
 
-- Docker with Docker Compose support
-- Network access from CLI users to the server
-- Access to the machines or GPU pool that will execute inference workloads
-- Permission to pull the Tandemn container images referenced by the release bundle
+At minimum, AWS credentials need access to the EC2 instance types you plan to use, `s3:GetObject` and `s3:PutObject` on your bucket, and `servicequotas:GetServiceQuota` for quota tracking.
 
-<Note>
-  The server release includes a `docker-compose.yml` file and an `.env.example` file. Most server configuration starts by copying `.env.example` to `.env`.
-</Note>
+Install `uv` before running server setup:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
 ## CLI requirements
 
 Users need a Python environment and the URL of the Tandemn server.
 
-- Python 3.10 or newer
+- Python 3.12 or newer
 - `pip`
 - The `tandemn` Python package
 - `TD_SERVER_URL` set to the server URL
@@ -36,11 +44,11 @@ tandemn check
 
 ## Recommended first setup
 
-For an initial evaluation, use one administrator-managed server and one CLI user. Verify connectivity with `tandemn check` before submitting real workloads.
+For an initial evaluation, use one administrator-managed server, one CLI user, and a small JSONL workload. Verify connectivity with `tandemn check` before submitting real workloads.
 
 <Columns cols={2}>
   <Card title="Install server" icon="server" href="/getting-started/install-server">
-    Bring up the Docker Compose stack.
+    Install and start the control plane.
   </Card>
   <Card title="Install CLI" icon="terminal" href="/getting-started/install-cli">
     Set up a local CLI environment.

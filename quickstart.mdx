@@ -6,18 +6,16 @@ icon: "rocket"
 
 This quickstart walks through a minimal Tandemn setup: an administrator starts the server, a user connects the CLI, and the user submits a batch inference job.
 
-<Note>
-  You need a network-reachable machine for the Tandemn server and Docker Compose support on that machine.
-</Note>
+> You need a network-reachable control plane, AWS credentials, Redis, an S3 bucket, and Python 3.12+.
 
 ## What you will do
 
 <Steps>
-  <Step title="Download the Tandemn server release">
-    Pull the release bundle that contains the Docker Compose configuration and example environment file.
+  <Step title="Clone the Tandemn server repository">
+    Clone the Tandemn server repository and run setup.
   </Step>
   <Step title="Start the server">
-    Configure `.env`, pull the container images, and start the service stack.
+    Configure `.env`, start Redis, and run the control plane.
   </Step>
   <Step title="Install the CLI">
     Install the `tandemn` Python package in your local environment.
@@ -29,30 +27,25 @@ This quickstart walks through a minimal Tandemn setup: an administrator starts t
 
 ## 1. Start the server
 
-The Tandemn server is packaged as a release bundle with a `docker-compose.yml` file and an `.env.example` file.
-
 ```bash
-curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
-tar -xzf tandemn-0.0.1.tar.gz
-cd tandemn-0.0.1
+git clone --recurse-submodules https://github.com/Tandemn-Labs/Tandemn-server.git
+cd Tandemn-server
+bash setup.sh
 ```
 
-Copy the example environment file and edit the values for your cluster.
+Review `.env`, then start Redis.
 
 ```bash
-cp .env.example .env
+docker run -d -p 6379:6379 redis
 ```
 
-Start the containers.
+Start the control plane with the URL that EC2 replicas can reach.
 
 ```bash
-docker compose pull
-docker compose up
+python server.py --url https://your-public-url.example.com
 ```
 
-<Tip>
-  Keep the server URL handy. CLI users will set it as `TD_SERVER_URL`.
-</Tip>
+> Keep the server URL handy. CLI users will set it as `TD_SERVER_URL`.
 
 ## 2. Install the CLI
 
@@ -88,7 +81,9 @@ If the check fails, see [Troubleshooting](/admin/troubleshooting).
 Create or choose a JSONL prompt file, then submit it with a model and SLO.
 
 ```bash
-tandemn deploy Qwen/Qwen2.5-7B-Instruct <prompts.jsonl> --slo 4
+tandemn plan Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+tandemn progress
 ```
 
 You should see CLI output showing that the job was accepted by the server.

@@ -4,22 +4,22 @@ description: "How the Tandemn server, CLI, users, and GPU resources work togethe
 icon: "network"
 ---
 
-Tandemn uses a client-server architecture. Administrators operate the server, and users submit inference jobs through the CLI.
+Tandemn System uses a client-server architecture. Administrators operate the self-hosted control plane, and users submit inference jobs through the CLI.
 
 ## Components
 
 <Columns cols={2}>
-  <Card title="Tandemn server" icon="server">
-    The central service that receives job requests, tracks cluster state, and coordinates orchestration.
+  <Card title="Control plane" icon="server">
+    The server that receives job requests, runs placement planning, tracks quota, launches replicas, and coordinates orchestration.
   </Card>
   <Card title="Tandemn CLI" icon="terminal">
     The command line interface users install locally to check connectivity and submit workloads.
   </Card>
   <Card title="GPU resources" icon="cpu">
-    The accelerated machines available to execute inference workloads.
+    AWS instances launched by SkyPilot to execute inference workloads.
   </Card>
   <Card title="Batch inputs" icon="file-json">
-    JSONL prompt files that describe the work users want Tandemn to run.
+    OpenAI-style JSONL files that describe the work users want Tandemn to run.
   </Card>
 </Columns>
 
@@ -27,23 +27,33 @@ Tandemn uses a client-server architecture. Administrators operate the server, an
 
 <Steps>
   <Step title="A user submits a job">
-    The user runs `tandemn deploy` with a model, JSONL prompt file, and SLO.
+    The user runs `tandemn deploy` with a model, JSONL input file, and SLO deadline.
   </Step>
   <Step title="The server receives the job">
-    The server validates the request and evaluates the available cluster resources.
+    The control plane validates the request, uploads local input to S3, and evaluates available resources.
   </Step>
   <Step title="Tandemn builds an execution plan">
-    The orchestration layer decides how to place the workload across the available GPU pool.
+    The placement solver chooses GPU type, region, tensor parallelism, pipeline parallelism, replica count, and launch mode.
   </Step>
   <Step title="The workload runs">
-    Tandemn executes the inference job and reports status through the user-facing workflow.
+    SkyPilot launches replicas, Redis coordinates chunks, vLLM runs inference, and outputs are written to S3.
   </Step>
 </Steps>
+
+## Execution model
+
+Input is split into chunks and queued in Redis. Replica clusters pull chunks, run inference through vLLM, upload per-chunk outputs, and mark chunks complete. If a replica dies, its in-flight chunks can be reclaimed and returned to the queue.
+
+`tandemn swap` keeps the same queue while launching replacement replicas with a different GPU configuration. Old replicas are removed after the new replicas begin processing.
+
+## Optional Koi
+
+Orca standalone is the default path. Leave `KOI_SERVICE_URL` unset and the control plane handles placement, launch, chunked execution, monitoring, recovery, and output assembly itself.
+
+If `KOI_SERVICE_URL` is set, Tandemn can call Koi for an additional recommendation and send lifecycle callbacks. If Koi is unset, unavailable, times out, or returns bad data, Tandemn continues through the standalone path.
 
 ## Why this model matters
 
 This separation lets infrastructure teams manage hardware and cluster policy centrally while application and ML teams get a simpler job submission interface.
 
-<Tip>
-  Treat the Tandemn server as shared infrastructure. Keep ownership, deployment, and monitoring responsibilities clear before inviting users onto the cluster.
-</Tip>
+> Treat the Tandemn server as shared infrastructure. Keep ownership, deployment, and monitoring responsibilities clear before inviting users onto the cluster.

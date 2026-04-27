@@ -1,22 +1,38 @@
 ---
-title: "tandemn deploy"
-description: "Submit an inference job to Tandemn."
-sidebarTitle: "deploy"
+title: "plan and deploy"
+description: "Preview placement plans and submit inference jobs to Tandemn System."
+sidebarTitle: "plan and deploy"
 icon: "rocket"
 ---
 
-Use `tandemn deploy` to submit an inference job to the Tandemn server.
+Use `tandemn plan` to preview placement without launching, and `tandemn deploy` to submit a batch inference job. Both commands take a model name, an input JSONL file or S3 URI, and an SLO deadline.
 
 ## Usage
 
 ```bash
-tandemn deploy <model> <prompts-jsonl-file> --slo <value>
+tandemn plan <model> <input> [options]
+tandemn deploy <model> <input> [options]
 ```
 
-## Example
+## Examples
 
 ```bash
-tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+tandemn plan Qwen/Qwen2.5-7B-Instruct examples/workloads/demo_batch.jsonl --slo 4
+tandemn deploy Qwen/Qwen2.5-7B-Instruct examples/workloads/demo_batch.jsonl --slo 4
+```
+
+The solver automatically chooses a GPU type, tensor parallelism, pipeline parallelism, region, and launch mode unless you override those values.
+
+Manual placement example:
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct input.jsonl --gpu A10G --tp 1
+```
+
+Multi-replica chunked execution example:
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct input.jsonl --gpu A10G --tp 1 --replicas 2 --chunk-size 100
 ```
 
 ## Arguments
@@ -24,16 +40,48 @@ tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
 | Argument | Required | Description |
 | --- | --- | --- |
 | `model` | Yes | Model identifier to run. Use a model supported by your Tandemn deployment. |
-| `prompts-jsonl-file` | Yes | Path to the JSONL file containing the prompts or requests for the batch job. |
-| `--slo` | Yes | Service-level objective used by Tandemn when planning the job. |
+| `input` | Yes | Local JSONL file or `s3://...` URI containing the batch workload. Local files are uploaded to S3 automatically. |
+
+## Options
+
+| Flag | Description | Default |
+| --- | --- | --- |
+| `--slo <hours>` | Deadline. Accepts plain hours (`4`), fractional hours (`0.5h`), or minutes (`30m`). | `4` |
+| `--max-output-tokens N` | Maximum tokens per response. | `1024` |
+| `--gpu <type>` | Override GPU type, such as `A100`, `H100`, `L40S`, or `A10G`. | Solver-selected |
+| `--tp N` | Override tensor parallelism. | Solver-selected |
+| `--pp N` | Override pipeline parallelism. | Solver-selected |
+| `--replicas N` | Number of replica clusters. | `1` |
+| `--chunk-size N` | Lines per chunk for multi-replica jobs. | `1000` |
+| `--no-advisor` | Skip the LLM advisor and use the roofline solver only. | Disabled |
+| `--skip-dangerously` | Skip the interactive solver choice and auto-pick the advisor recommendation. | Disabled |
+| `--force` | Skip feasibility checks and launch anyway. | Disabled |
+| `--persist` | Keep clusters alive after the job completes. | Disabled |
+| `--on-demand` | Use on-demand instances instead of spot instances. | Disabled |
+
+## Placement behavior
+
+Two placement solvers can run when you call `tandemn plan` or `tandemn deploy`:
+
+- LLM Advisor: architecture-aware recommendation over the performance database, with an LLM reasoning layer that ranks candidates by cost, throughput, and SLO feasibility.
+- Roofline solver: deterministic analytical placement based on GPU bandwidth, TFLOPS, memory, and model constraints.
+
+Both recommendations can be shown side by side. If the advisor is unavailable, Tandemn falls back to the roofline solver. If `KOI_SERVICE_URL` is set, Tandemn can also show an optional Koi recommendation alongside the built-in solvers.
+
+## Supported overrides
+
+Use `--gpu`, `--tp`, and `--pp` when you want to force a specific hardware plan. This is useful for models outside the performance database or when you already know the target fleet.
+
+```bash
+tandemn deploy <any-hf-model> input.jsonl --gpu A10G --tp 1
+```
 
 ## Prompt file format
 
-Each line should be one JSON object.
+Use OpenAI-style batch JSONL. See [Input format](/cli/input-format) for the full schema.
 
 ```json prompts.jsonl
-{"messages":[{"role":"user","content":"What is Tandemn?"}]}
-{"messages":[{"role":"user","content":"Summarize GPU scheduling in one sentence."}]}
+{"custom_id":"req-1","method":"POST","url":"/v1/chat/completions","body":{"model":"placeholder","messages":[{"role":"user","content":"What is Tandemn?"}],"max_tokens":256}}
 ```
 
 ## Before submitting
@@ -42,4 +90,5 @@ Each line should be one JSON object.
 - Confirm the prompt file exists.
 - Confirm the file is valid JSONL.
 - Confirm the model is supported by your deployment.
+- Confirm the S3 upload bucket is configured on the server.
 - Start with a small file before scaling up.

@@ -1,0 +1,41 @@
+---
+title: "Analytics"
+description: "Inspect completed Tandemn runs and scheduler timeseries."
+sidebarTitle: "Analytics"
+icon: "chart-line"
+---
+
+Analytics commands read completed run data recorded by the control plane.
+
+## History
+
+```bash
+tandemn history
+tandemn history --model Qwen/Qwen2.5-7B-Instruct
+tandemn history --gpu A100
+```
+
+| Flag | Description |
+| --- | --- |
+| `--model X` | Filter completed runs by model. |
+| `--gpu Y` | Filter completed runs by GPU type. |
+
+## Inspect a run
+
+```bash
+tandemn inspect <run_id>
+tandemn inspect <run_id> --replicas
+```
+
+| Command | Description |
+| --- | --- |
+| `tandemn inspect <run_id>` | Full run report with latency, throughput, cost, and GPU utilization. |
+| `tandemn inspect <run_id> --replicas` | Show per-replica summaries side by side. |
+
+## Scheduler timeseries
+
+```bash
+tandemn timeseries <run_id>
+```
+
+Use `tandemn timeseries` when you need post-run scheduler detail for debugging throughput, chunk progress, or replica behavior.

@@ -9,7 +9,7 @@ The Tandemn CLI is the user-facing tool for checking connectivity and submitting
 
 ## Install
 
-Install the package in your preferred Python environment.
+Install the package in your preferred Python 3.12+ environment.
 
 <CodeGroup>
 
@@ -33,6 +33,12 @@ Set `TD_SERVER_URL` to the URL provided by your Tandemn administrator.
 export TD_SERVER_URL=<your-server-url>
 ```
 
+If your deployment requires API key authentication, also set `TD_API_KEY`.
+
+```bash
+export TD_API_KEY=<your-api-key>
+```
+
 Persist the variable in your shell profile if you use the same server regularly.
 
 ```bash
@@ -47,9 +53,7 @@ tandemn check
 
 Successful output means the CLI can reach the Tandemn server and you can submit jobs.
 
-<Tip>
-  If your organization uses multiple Tandemn environments, keep separate shell profiles or terminal sessions for development, staging, and production.
-</Tip>
+> If your organization uses multiple Tandemn environments, keep separate shell profiles or terminal sessions for development, staging, and production.
 
 ## Next step
 

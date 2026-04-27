@@ -14,10 +14,18 @@ export TD_SERVER_URL=<your-server-url>
 tandemn check
 ```
 
+If the deployment requires API key authentication, set `TD_API_KEY` in the same shell session before running `tandemn check`.
+
+```bash
+export TD_API_KEY=<your-api-key>
+tandemn check
+```
+
 ## When to run it
 
 - After installing the CLI
 - After changing `TD_SERVER_URL`
+- After changing `TD_API_KEY`
 - Before submitting a large workload
 - When debugging failed job submission
 
@@ -29,5 +37,6 @@ Check:
 - The server URL is correct.
 - Your machine can reach the server network.
 - The server is running.
+- `TD_API_KEY` is set if your administrator requires it.
 
 See [Troubleshooting](/admin/troubleshooting) for a fuller checklist.

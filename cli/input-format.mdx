@@ -1,0 +1,62 @@
+---
+title: "Input format"
+description: "Prepare OpenAI-style batch JSONL workloads for Tandemn System."
+sidebarTitle: "Input format"
+icon: "file-json"
+---
+
+Tandemn System accepts OpenAI-style batch JSONL. Each line is one request object.
+
+```json
+{
+  "custom_id": "req-1",
+  "method": "POST",
+  "url": "/v1/chat/completions",
+  "body": {
+    "model": "placeholder",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Your prompt here"
+      }
+    ],
+    "max_tokens": 256
+  }
+}
+```
+
+The `body.model` value can be a placeholder because the model is selected by the `tandemn deploy <model> <input>` command.
+
+## Minimal JSONL example
+
+```json prompts.jsonl
+{"custom_id":"req-1","method":"POST","url":"/v1/chat/completions","body":{"model":"placeholder","messages":[{"role":"user","content":"Summarize what batch inference is in one sentence."}],"max_tokens":256}}
+{"custom_id":"req-2","method":"POST","url":"/v1/chat/completions","body":{"model":"placeholder","messages":[{"role":"user","content":"Give me three reasons to use heterogeneous GPUs."}],"max_tokens":256}}
+```
+
+## Local files and S3 URIs
+
+Local files are uploaded to S3 automatically by the control plane. S3 URIs are passed through directly.
+
+```bash
+tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
+tandemn deploy Qwen/Qwen2.5-7B-Instruct s3://your-bucket/path/prompts.jsonl --slo 4
+```
+
+## Sample workloads
+
+The server repository includes sample workloads under `examples/workloads/`.
+
+| File | Size | Purpose |
+| --- | --- | --- |
+| `demo_batch.jsonl` | 30 requests | Quick smoke test. |
+| `sharegpt-numreq_200-*.jsonl` | 200 requests | Realistic ShareGPT conversations. |
+| `stress_5000.jsonl` | 5,000 requests | Load and stress testing. |
+
+Generate a larger workload from a sample:
+
+```bash
+python examples/workloads/make_long_workload.py \
+  examples/workloads/sharegpt-numreq_200-avginputlen_956-avgoutputlen_50.jsonl \
+  25 /tmp/stress_5k.jsonl
+```
