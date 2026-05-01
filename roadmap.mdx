@@ -1,0 +1,30 @@
+---
+title: "Roadmap"
+description: "Features that are in the works"
+icon: "milestone"
+---
+
+## Observability / CLI
+
+- Add individual user level observability
+  - Deployment of jobs within individual user's cluster limit
+  - Dashboard view of only individual user's job
+  - Integration with enterprise login solutions like SSO/RBAC/SAML
+- Add administrator controls to cluster
+  - Deletion / termination of jobs from admin level
+
+## Control plane
+
+- Adding suport for cloud + on-premise hybrid clusters
+  - Unified resource views across cloud and on-premise machines
+  - Scheduling of jobs across hybrid cluster scenarios
+- Adding support for GCP & MS Azure
+  - Mapping instance types for same GPU types across cloud providers
+
+## Data plane
+
+- Configuring fast inter-instance networking in GCP & Azure
+  - GCP: GPUDirect-TCPX/TCPXO
+  - Azure: InfiniBand/RDMA
+- Adding online inference based on Nvidia Dynamo
+  - Nvidia Dynamo has important features like KV-aware routing, throughput/load-based autoscaling, multinode inference primitives

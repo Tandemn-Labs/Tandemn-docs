@@ -12,12 +12,6 @@
     "default": "dark",
     "strict": true
   },
-  "background": {
-    "color": {
-      "light": "#0A0A0A",
-      "dark": "#0A0A0A"
-    }
-  },
   "icons": {
     "library": "lucide"
   },
@@ -29,7 +23,8 @@
         "icon": "rocket",
         "pages": [
           "introduction",
-          "quickstart"
+          "quickstart",
+          "roadmap"
         ]
       },
       {
@@ -87,13 +82,14 @@
       {
         "group": "Reference",
         "icon": "braces",
+        "directory": "card",
         "pages": [
           "reference/rest-api"
         ]
       },
       {
         "group": "Learn more",
-        "icon": "circle-help",
+        "icon": "circle-question-mark",
         "root": "learn-more/index",
         "directory": "card",
         "pages": [
