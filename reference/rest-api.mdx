@@ -1,0 +1,107 @@
+---
+title: "REST API"
+description: "Control plane endpoints exposed by Tandemn System."
+sidebarTitle: "REST API"
+icon: "braces"
+---
+
+The Tandemn System control plane exposes a REST API at `http://localhost:26336` by default. Most users should use the CLI; use the REST API for integrations, dashboards, and operational tooling.
+
+## Endpoint reference
+
+| Endpoint | Method | Description |
+| --- | --- | --- |
+| `/submit/batch` | POST | Submit a batch inference job. |
+| `/test/placement` | POST | Run solver only without launching. |
+| `/jobs` | GET | List all jobs. |
+| `/job/{id}` | GET | Job status and progress. |
+| `/job/{id}/phase` | POST | Update job lifecycle phase. |
+| `/job/{id}/metrics` | GET | Latest aggregated metrics snapshot. |
+| `/job/{id}/metrics/stream` | GET | SSE metrics stream. |
+| `/job/{id}/metrics/ingest` | POST | Sidecar metrics ingest from replicas. |
+| `/job/{id}/metrics/summary` | POST | Per-replica build metrics summary. |
+| `/job/{id}/throughput` | GET | Sustained throughput over the rolling window. |
+| `/job/{id}/replicas` | GET | Per-replica state, phase, region, and metrics availability. |
+| `/job/{id}/replicas/{rid}/metrics` | GET | Metrics for a specific replica. |
+| `/job/{id}/replicas/summaries` | GET | Per-replica completion summaries. |
+| `/job/{id}/scale` | POST | Add replicas to a running job. |
+| `/job/{id}/kill` | POST | Kill specific replicas. |
+| `/job/{id}/swap` | POST | Hot-swap replicas to a new GPU configuration. |
+| `/job/{id}/chunks/progress` | GET | Chunk-level progress. |
+| `/job/{id}/chunks/pull` | POST | Pull the next chunk. Replica-facing. |
+| `/job/{id}/chunks/complete` | POST | Mark a chunk complete. |
+| `/job/{id}/chunks/renew` | POST | Renew a chunk lease. |
+| `/dashboard` | GET | Web dashboard HTML. |
+| `/dashboard/poll` | GET | Dashboard JSON payload for polling fallback. |
+| `/dashboard/stream` | GET | Real-time dashboard SSE stream. |
+| `/analytics/runs` | GET | List completed runs. |
+| `/analytics/runs/{id}` | GET | Full completed run report. |
+| `/analytics/runs/{id}/timeseries` | GET | Scheduler timeseries for a run. |
+| `/quota/status` | GET | Quota usage across AWS regions. |
+| `/resources` | GET | Instance catalog and quota pools. |
+
+## Example responses
+
+### `GET /job/{id}/metrics`
+
+```json
+{
+  "job_id": "mo-qwen7b-a1b2",
+  "timestamp": 1711612800.0,
+  "avg_generation_throughput_toks_per_s": 1450.5,
+  "avg_prompt_throughput_toks_per_s": 320.0,
+  "gpu_cache_usage_perc": 0.42,
+  "num_requests_running": 64,
+  "num_requests_waiting": 0,
+  "generation_tokens_total": 2800000,
+  "prompt_tokens_total": 350000,
+  "gpu_sm_util_pct": 95.2,
+  "gpu_mem_bw_util_pct": 61.0,
+  "ttft_ms_p50": 45.0,
+  "ttft_ms_p95": 120.0,
+  "tpot_ms_p50": 8.5,
+  "tpot_ms_p95": 15.0
+}
+```
+
+### `GET /job/{id}/chunks/progress`
+
+```json
+{
+  "total": 10,
+  "pending": 3,
+  "inflight": 2,
+  "completed": 5,
+  "failed": 0,
+  "all_done": false
+}
+```
+
+### `POST /job/{id}/scale`
+
+```json
+{
+  "count": 2,
+  "gpu_type": "L40S",
+  "tp_size": 4,
+  "pp_size": 1,
+  "on_demand": false,
+  "force": false
+}
+```
+
+`gpu_type`, `tp_size`, and `pp_size` are optional. If omitted, Tandemn inherits them from the existing job.
+
+### `POST /job/{id}/swap`
+
+```json
+{
+  "gpu_type": "H100",
+  "tp_size": 4,
+  "num_replicas": 2,
+  "ready_threshold": 1,
+  "force": false
+}
+```
+
+New replicas launch first. Old replicas are killed after `ready_threshold` new replicas begin processing.

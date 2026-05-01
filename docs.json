@@ -63,6 +63,7 @@
         "directory": "card",
         "pages": [
           "admin/server-deployment",
+          "admin/security",
           "admin/configuration",
           "admin/environment-variables",
           "admin/troubleshooting"
@@ -81,6 +82,13 @@
           "cli/monitoring",
           "cli/analytics",
           "cli/input-format"
+        ]
+      },
+      {
+        "group": "Reference",
+        "icon": "braces",
+        "pages": [
+          "reference/rest-api"
         ]
       },
       {
