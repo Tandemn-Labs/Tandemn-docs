@@ -42,6 +42,29 @@ docker run -d -p 6379:6379 redis
 python server.py --url https://your-public-url.example.com
 ```
 
+## Manual installation
+
+Use this path when you do not want to run `setup.sh`.
+
+```bash
+uv venv .venv --python 3.12 --seed
+source .venv/bin/activate
+uv pip install -r requirements.txt
+sky check
+```
+
+Create a `.env` file in the project root:
+
+```bash
+S3_UPLOAD_BUCKET=your-s3-bucket
+HF_TOKEN=hf_your_token_here
+TD_API_KEY=your-secret-key
+ANTHROPIC_API_KEY=sk-ant-...
+KOI_SERVICE_URL=http://localhost:8090
+```
+
+`KOI_SERVICE_URL` is optional. Leave it unset for standalone Orca behavior.
+
 ## Operating model
 
 The administrator owns the server deployment, AWS credentials, S3 bucket, Redis, environment configuration, network exposure, and cluster access. Users own their prompt files, model choices, SLOs, and CLI environment.

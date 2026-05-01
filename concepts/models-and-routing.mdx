@@ -31,6 +31,41 @@ tandemn deploy <any-hf-model> input.jsonl --gpu A10G --tp 1
 
 If the advisor is unavailable, Tandemn falls back to the roofline solver. If `KOI_SERVICE_URL` is set, Tandemn can also show an optional Koi recommendation.
 
+The LLM Advisor requires `ANTHROPIC_API_KEY` and the performance database. Without those, `tandemn plan` and `tandemn deploy` can still use the roofline solver.
+
+## Performance database
+
+The LLM placement advisor uses a performance database of profiled vLLM runs. Download it into the server repository:
+
+```bash
+curl -L https://github.com/Tandemn-Labs/LLM_placement_solver/releases/download/aiconfigurator-v1/data.csv \
+  -o LLM_placement_solver/llm_advisor/data/aiconfigurator/data.csv
+```
+
+The dataset contains 103K profiled vLLM runs across A100, H100, H200, B200, GB200, and L40S GPUs, sourced from NVIDIA Dynamo AIConfigurator.
+
+## Profiled models
+
+| Model | Params | Type | Profiled GPUs |
+| --- | --- | --- | --- |
+| Meta-Llama-3.1-8B | 8B | Dense | A100, H100, H200, B200, GB200, L40S |
+| Meta-Llama-3.1-70B | 70B | Dense | A100, H100, H200, B200, GB200, L40S |
+| Llama-3.1-70B-Instruct-FP8 | 70B | Dense FP8 | A100, H100, H200, B200, GB200, L40S |
+| Meta-Llama-3.1-405B | 405B | Dense | A100, H100, H200, B200, GB200 |
+| Nemotron-Super-49B | 49B | Dense | A100, H100, H200, B200, GB200, L40S |
+| Nemotron-H-56B | 56B | Dense | A100, H100, H200, B200, GB200, L40S |
+| Qwen3-8B | 8B | Dense | A100, H100, H200, B200, GB200, L40S |
+| Qwen3-32B | 32B | Dense | A100, H100, H200, B200, GB200, L40S |
+| Qwen3-32B-FP8 | 32B | Dense FP8 | A100, H100, H200, B200, GB200, L40S |
+| Qwen3-30B-A3B | 30B | MoE, 3B active | A100, H100, H200, B200, GB200, L40S |
+| Qwen3-235B-A22B | 235B | MoE, 22B active | A100, H100, H200, B200, GB200 |
+| Qwen3-235B-A22B-FP8 | 235B | MoE, 22B active, FP8 | A100, H100, H200, B200, GB200 |
+| Qwen3-235B-A22B-NVFP4 | 235B | MoE, 22B active, FP4 | A100, H100, H200, B200, GB200 |
+| Qwen3-Coder-480B-A35B | 480B | MoE, 35B active | H100, H200, B200, GB200 |
+| Nemotron-3-Nano-30B-A3B | 30B | MoE, 3B active | A100, H100, H200, B200, GB200, L40S |
+
+For models not in the database, the advisor estimates throughput by matching model family, size, and I/O profile. Use `--gpu`, `--tp`, and `--pp` when you want to override placement manually.
+
 ## Routing goals
 
 Tandemn's routing layer is designed to reduce the amount of manual placement work users need to do. Instead of asking each user to pick a specific machine, Tandemn can evaluate the job and choose an appropriate hardware mix.

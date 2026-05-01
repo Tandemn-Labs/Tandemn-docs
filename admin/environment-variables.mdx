@@ -41,6 +41,12 @@ Server variables are release-specific. After running `bash setup.sh`, inspect `.
 
 > Do not expose secrets, credentials, tokens, or private hostnames in public documentation or committed files.
 
+## IAM requirements
+
+At minimum, the server's AWS credentials need permission to launch and terminate the instance types you plan to use, read and write objects in `S3_UPLOAD_BUCKET`, and read service quota values for capacity tracking.
+
+The server repository includes a least-privilege IAM policy example at `docs/iam-policy.json`.
+
 ## Common mistakes
 
 - Setting `TD_SERVER_URL` in one shell and running `tandemn` from another shell.

@@ -1,0 +1,47 @@
+---
+title: "Security"
+description: "Secure network access and API authentication for Tandemn System."
+icon: "shield-check"
+---
+
+The Tandemn System control plane accepts connections from EC2 replicas over the network. If the endpoint is exposed through a tunnel or public URL, set an API key.
+
+## API key authentication
+
+Set `TD_API_KEY` in the server `.env` file:
+
+```bash
+TD_API_KEY=your-secret-key
+```
+
+Replica-to-server communication uses this token. The key is distributed to replicas automatically at launch.
+
+CLI users also need the key when the deployment requires authenticated requests:
+
+```bash
+export TD_API_KEY=<your-api-key>
+```
+
+## Network options
+
+| Option | Use case |
+| --- | --- |
+| Cloudflare Quick Tunnel | Local development with an ephemeral URL. |
+| Tailscale | Stable mesh VPN access for teams. |
+| Same-VPC EC2 | Production deployment without public exposure. |
+
+## Cloudflare Quick Tunnel
+
+```bash
+curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+chmod +x cloudflared
+./cloudflared tunnel --url http://localhost:26336
+```
+
+Then pass the generated URL when starting the server or set it in `.env`:
+
+```bash
+TD_SERVER_URL=https://your-tunnel.trycloudflare.com
+```
+
+For production, deploy the control plane on a small EC2 instance in the same VPC as the inference replicas. This avoids public exposure and tunnel latency.
