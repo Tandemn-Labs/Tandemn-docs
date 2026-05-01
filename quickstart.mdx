@@ -1,97 +1,86 @@
 ---
 title: "Quickstart"
-description: "Deploy Tandemn, connect the CLI, and submit your first inference job."
+description: "Deploy Tandemn server, connect the CLI, and submit your first inference job."
 icon: "rocket"
 ---
 
-This quickstart walks through a minimal Tandemn setup: an administrator starts the server, a user connects the CLI, and the user submits a batch inference job.
+## Pre-requisites
 
-> You need a network-reachable control plane, AWS credentials, Redis, an S3 bucket, and Python 3.12+.
+Server:
 
-## What you will do
+- Docker with Docker Compose support
 
-<Steps>
-  <Step title="Clone the Tandemn server repository">
-    Clone the Tandemn server repository and run setup.
-  </Step>
-  <Step title="Start the server">
-    Configure `.env`, start Redis, and run the control plane.
-  </Step>
-  <Step title="Install the CLI">
-    Install the `tandemn` Python package in your local environment.
-  </Step>
-  <Step title="Submit a job">
-    Point the CLI at the server and run a first inference job.
-  </Step>
-</Steps>
+CLI:
 
-## 1. Start the server
+- Python >= 3.12
+
+## Server
+
+The following steps are for the sysadmin to bring up Tandemn's server in order to manage the cluster and handle inference job requests from users. The servers consists of 3 containers, and are bundled in one `docker-compose.yml`.
+
+### Download the release
+
+The server is released as a .tar.xz tarball, bundling a `docker-compose.yml` and a `.env.example`.
 
 ```bash
-git clone --recurse-submodules https://github.com/Tandemn-Labs/Tandemn-server.git
-cd Tandemn-server
-bash setup.sh
+curl -L -O "https://github.com/Tandemn-Labs/tandemn-system/releases/download/0.0.1/tandemn-0.0.1.tar.gz"
+tar -xzf tandemn-0.0.1.tar.gz
+cd tandemn-0.0.1
 ```
 
-Review `.env`, then start Redis.
+### Populate the .env file
+
+Copy the `.env.example` file into `.env` and edit the respective parameters.
 
 ```bash
-docker run -d -p 6379:6379 redis
+cp .env.example .env
 ```
 
-Start the control plane with the URL that EC2 replicas can reach.
+### Bring up the containers
 
 ```bash
-python server.py --url https://your-public-url.example.com
+docker compose pull
+docker compose up
 ```
 
-> Keep the server URL handy. CLI users will set it as `TD_SERVER_URL`.
+## Client (CLI)
 
-## 2. Install the CLI
+### Install the Tandemn CLI
 
-Install the Tandemn CLI in a Python environment.
+You can do the following in any Python installation or virtual environment
 
-<CodeGroup>
-
-```bash pip
+```bash
 pip install tandemn
 ```
 
-```bash venv
-python -m venv .venv
-source .venv/bin/activate
-pip install tandemn
+### Set server URL
+
 ```
-
-</CodeGroup>
-
-## 3. Connect to the server
-
-Set the server URL and verify that the CLI can reach it.
-
-```bash
 export TD_SERVER_URL=<your-server-url>
+```
+
+### Check connectivity
+
+```
 tandemn check
 ```
 
-If the check fails, see [Troubleshooting](/admin/troubleshooting).
+### Start using the CLI to launch jobs
 
-## 4. Submit a job
-
-Create or choose a JSONL prompt file, then submit it with a model and SLO.
-
-```bash
-tandemn plan Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
-tandemn deploy Qwen/Qwen2.5-7B-Instruct prompts.jsonl --slo 4
-tandemn progress
+```
+tandemn deploy Qwen/Qwen2.5-7B-Instruct <some-jsonl-prompt-file> --slo 4
 ```
 
-You should see CLI output showing that the job was accepted by the server.
+You can look in the CLI documentation section to see details about the commands.
 
 ## Where to go next
 
 <Columns cols={2}>
-  <Card title="Install the server" icon="server" href="/getting-started/install-server">
+  <Card
+    title="Install the server"
+    icon="server"
+    href="/getting-started/install-server"
+  >
     Review the deployment flow in more detail.
   </Card>
   <Card title="CLI deploy command" icon="terminal" href="/cli/deploy">
