@@ -6,6 +6,6 @@ Koi is Tandemn's planner, deploying mixed inference jobs across heterogeneous cl
 
 ### Simplified view
 
-![Planner as a black box](/public/diagrams/planner-as-a-black-box.svg)
+![Planner as a black box](/diagrams/planner-as-a-black-box.svg)
 
 Koi can be understood as a black-box planner with the inputs/outputs as shown. For more details about how this works in a larger Kubernetes architecture, refer to [Tandemn Architecture](/architecture/tandemn-architecture/).
