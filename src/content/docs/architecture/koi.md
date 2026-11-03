@@ -1,0 +1,11 @@
+---
+title: Tandemn Planner (Koi)
+---
+
+Koi is Tandemn's planner, deploying mixed inference jobs across heterogeneous clusters (multi-cloud, hybrid) and heterogeneous accelerators (Nvidia, AMD, Google TPU etc). Koi runs in a continuous loop, producing a plan every tick (default: 5 mins). In every planning tick, Koi takes into account the new set of jobs and resources while also learning from existing deployments through metrics.
+
+### Simplified view
+
+![Planner as a black box](/public/diagrams/planner-as-a-black-box.svg)
+
+Koi can be understood as a black-box planner with the inputs/outputs as shown. For more details about how this works in a larger Kubernetes architecture, refer to [Tandemn Architecture](/architecture/tandemn-architecture/).
