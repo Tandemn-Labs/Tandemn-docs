@@ -15,12 +15,12 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'architecture' } }],
 				},
 				{
-					label: 'Others',
-					items: [{ autogenerate: { directory: 'others' } }],
-				},
-				{
 					label: 'Reference',
 					items: [{ autogenerate: { directory: 'reference' } }],
+				},
+				{
+					label: 'Help',
+					items: [{ autogenerate: { directory: 'others' } }],
 				},
 			],
 		}),
