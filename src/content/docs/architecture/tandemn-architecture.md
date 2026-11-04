@@ -4,7 +4,8 @@ title: Tandemn Architecture
 
 This page documents the reference architecture that Tandemn assumes for a complete Tandemn-enabled multi-cluster inference deployment. 
 
-![Tandemn reference architecture](/diagrams/tandemn-reference-architecture.svg)
+<img src="/diagrams/tandemn-reference-architecture-light.svg" alt="Tandemn reference architecture" class="dark:sl-hidden" />
+<img src="/diagrams/tandemn-reference-architecture-dark.svg" alt="Tandemn reference architecture" class="light:sl-hidden" />
 
 The reference architecture is split into 2 key components - the Tandemn control plane and the Tandemn per-cluster Kubernetes operator.
 
